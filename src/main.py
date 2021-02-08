@@ -144,8 +144,53 @@ Constant : T_INT_CONSTANT
 Bool_Constant : T_TRUE
 	    | T_FALSE
 
+T_VOID: 'void'
+T_INT: 'int'
+T_DOUBLE: 'double'
+T_BOOL: 'bool'
+T_STRING: 'string'
+T_CLASS: 'class'
+T_INTERFACE: 'interface'
+T_NULL: 'null'
+T_THIS: 'this'
+T_EXTENDS: 'extends'
+T_IMPLEMENTS: 'implemnts'
+T_FOR: 'for'
+T_WHILE: 'while'
+T_IF: 'if'
+T_ELSE: 'else'
+T_RETURN: 'return'
+T_BREAK: 'break'
+T_CONTINUE: 'continue'
+T_NEW: 'new'
+T_NEWARRAY: 'NewArray'
+T_PRINT: 'Print'
+T_READINTEGER: 'ReadInteger'
+T_READLINE: 'ReadLine'
+T_DITOI: 'ditol'
+T_ITOD: 'itod'
+T_BTOI: 'btoi'
+T_ITOB: 'itob'
+T_PRIVATE: 'private'
+T_PROTECTED: 'protected'
+T_PUBLIC: 'public'
+T_TRUE: 'true'
+T_FALSE: 'false'
+T_AND: '&&'
+T_OR: '\|\|'
+T_EQUAL: '=='
+T_NOT_EQUAL: '!='
+T_LESS_THAN_EQUAL: '<='
+T_GREATER_THAN_EQUAL: '>='
+T_ID: /[a-zA-Z]([a-zA-Z0-9]|\_)*/
+T_STRING_CONSTANT: /\d+\.\d*[E,e]\+?\d+/ | /\d+\.\d*/
+T_INT_COSTANT: /0[x|X][\da-fA-F]*/ | /\d+/
+T_DOUBLE_CONSTANT: /"[^"^\n]*"/
+WHITE_SPACE: /[ \r\f\s\t\n]/
+SINGLE_LINE_COMMENT: /\/\/[^\n]*/
+MULTI_LINE_COMMENT: //\* [.\n]* \\\*/
 %import common.WS -> WHITESPACE
-%ignore WHITESPACE
+%ignore WHITE_SPACE
 %ignore SINGLE_LINE_COMMENT
 %ignore MULTI_LINE_COMMENT
 
