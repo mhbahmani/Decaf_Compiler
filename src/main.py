@@ -1,20 +1,18 @@
 from lark import Lark
 
 grammer = """
-Start : Decl Program
+Start : Program
 
 Nothing :
 
-Program : Decl Program
-        | Nothing
+Program : Decl+
 
 Decl : VariableDecl
         | FunctionDecl
         | ClassDecl
         | InterfaceDecl
 
-VariableDecls : Nothing
-        | VariableDecls VariableDecl
+VariableDecls : VariableDecl+
 
 VariableDecl : Variable ';'
 
@@ -32,44 +30,36 @@ FunctionDecl : Type T_ID '(' Formals ')' StmtBlock
         | T_VOID T_ID '(' Formals ')' StmtBlock
         | T_ID T_ID '(' Formals ')' StmtBlock
 
-Formals : Nothing
-        | Variable FormalsContinue
+Formals : (ariable FormalsContinue)?
 
-FormalsContinue : Nothing
-        | ',' Variable FormalsContinue
+FormalsContinue : (',' Variable FormalsContinue)*
 
-ClassDecl : T_CLASS T_ID Extends Implements  '{' Fields '}'
+ClassDecl : T_CLASS T_ID Extends Implements  '{' Field* '}'
 
-Extends : Nothing
-        | T_EXTENDS T_ID
+Extends : (T_EXTENDS T_ID)?
 
-Implements : Nothing
-        | T_IMPLEMENTS T_ID Ids
+Implements : (T_IMPLEMENTS T_ID Ids)?
 
-Ids : Nothing
-        | ',' T_ID Ids
+Ids : (',' T_ID)*
 
-Fields : Nothing
-        | Field Fields
+Fields : Field*
 
-Field : AccessMode VariableDecl
-        | AccessMode FunctionDecl
+Field : (AccessMode)? VariableDecl
+        | (AccessMode)? FunctionDecl
 
-AccessMode : Nothing
-        | T_PRIVATE
+AccessMode : T_PRIVATE
         | T_PROTECTED
         | T_PUBLIC
 
-InterfaceDecl : T_INTERFACE T_ID '{' Prototypes '}'
+InterfaceDecl : T_INTERFACE T_ID '{' Prototype* '}'
 
-Prototypes : Nothing
-        | Prototype Prototypes
+Prototypes : Prototype*
 
 Prototype : Type T_ID '(' Formals ')' ';'
         | T_VOID T_ID '(' Formals ')' ';'
         | T_ID T_ID '(' Formals ')' ';'
 
-StmtBlock : '{' VariableDecls Stmts '}'
+StmtBlock : '{' VariableDecls Stmt* '}'
 
 Stmt : NullExpr ';'
         | IfStmt
@@ -81,14 +71,12 @@ Stmt : NullExpr ';'
         | PrintStmt
         | StmtBlock
 
-Stmts : Nothing
-        | Stmt Stmts
+Stmts : Stms*
 
 
 IfStmt : T_IF '(' Expr ')' Stmt IfExtra
 
-IfExtra : %prec NoElse
-        | T_ELSE Stmt
+IfExtra : (T_ELSE Stmt)?
 
 WhileStmt : T_WHILE '(' Expr ')' Stmt
 
@@ -102,9 +90,9 @@ ContinueStmt : T_CONTINUE ';'
 
 PrintStmt : T_PRINT '(' Expr Exprs ')' ';'
 
-Expr : LValue %prec our_hero
+Expr : LValue
         | LValue '=' Expr
-        | T_ID %prec our_hero
+        | T_ID
         | T_ID '=' Expr
         | Constant
         | T_THIS
@@ -123,7 +111,7 @@ Expr : LValue %prec our_hero
         | Expr T_NOT_EQUAL Expr
         | Expr T_AND Expr
         | Expr T_OR Expr
-        | '-' Expr %prec Neg
+        | '-' Expr
         | '!' Expr
         | T_READINTEGER '(' ')'
         | T_READLINE '(' ')'
@@ -135,11 +123,9 @@ Expr : LValue %prec our_hero
         | T_ITOB '(' Expr ')'
         | T_BTOI '(' Expr ')'
 
-NullExpr : Nothing
-        | Expr
+NullExpr : (Expr)?
 
-Exprs : Nothing
-        | ',' Expr Exprs
+Exprs : (',' Expr)*
 
 LValue : Expr '.' T_ID
         | Expr '[' Expr ']'
@@ -147,8 +133,7 @@ LValue : Expr '.' T_ID
 Call : T_ID '(' Actuals ')'
         | Expr '.' T_ID '(' Actuals ')'
 
-Actuals : Nothing
-        | Expr Exprs
+Actuals : (Expr Exprs)?
 
 Constant : T_INT_CONSTANT
         | T_DOUBLE_CONSTANT
