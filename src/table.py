@@ -20,7 +20,7 @@ class PrimitiveType(enum.Enum):
 
 class ClassDef_type:
     classes = list()
-    
+
     def __init__(self, name, parent, interfaces):
         self.name = name
         self.parent = parent
@@ -30,6 +30,14 @@ class ClassDef_type:
     
     def add_child(self, child):
         self.children.append(child)
+
+    
+    def set_parrent(self, parent):
+        self.parent = parent
+    
+
+    def set_interfaces(self, interfaces):
+        self.interfaces = interfaces
 
 
 class ClassDef:
