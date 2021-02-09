@@ -67,7 +67,7 @@ def intit_variable(node):
     pass
 
 
-def init_funstion(node):
+def init_function(node):
     pass
 
 
