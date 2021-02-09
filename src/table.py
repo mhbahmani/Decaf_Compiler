@@ -77,7 +77,7 @@ def recognize_class_functions(node):
             recognize_global_class(child)
 
 
-def recognize_class_functions(node):
+def recognize_golbal_function(node):
     ret_type = get_type(node)
     name = node.children[1].children[0].data
     in_types = list()
