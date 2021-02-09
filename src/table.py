@@ -1,4 +1,5 @@
 import enum
+from CGEN import cgen_global_variable
 
 
 class FuncDef:
@@ -50,7 +51,7 @@ class ClassDef:
 def init_decls(node):
     for child in node.children:
         if node.data == "VariableDecl":
-            intit_variable(child)
+            cgen_global_variable(child)
     for child in node.children:
         if node.data == "InterfaceDecl":
             init_interface(child)
@@ -60,20 +61,3 @@ def init_decls(node):
     for child in node.children:
         if node.data == "FunctionDecl":
             init_function(child)
-    
-
-
-def intit_variable(node):
-    pass
-
-
-def init_function(node):
-    pass
-
-
-def init_class(node):
-    pass
-
-
-def init_interface(node):
-    pass
