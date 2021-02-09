@@ -31,18 +31,18 @@ class Node:
 
 source = None
 
-def build_parser_tree(larktree):
-    source = Node(larktree.data, None)
-    for child in larktree.children:
+def build_parser_tree(lark_tree):
+    source = Node(lark_tree.data, None)
+    for child in lark_tree.children:
         source.add_child(build_node_parse_tree(child, source))
     return source
 
 
-def build_node_parse_tree(larknode, parent):
-    if isinstance(larknode, Tree):
-        node = Node(larknode.data, parent)
-        for child in larknode.children:
+def build_node_parse_tree(lark_node, parent):
+    if isinstance(lark_node, Tree):
+        node = Node(lark_node.data, parent)
+        for child in lark_node.children:
             node.add_child(build_node_parse_tree(child, node))
     else :
-        return Node(larknode, parent)
+        return Node(lark_node, parent)
     
