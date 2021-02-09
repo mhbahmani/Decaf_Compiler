@@ -22,6 +22,16 @@ class PrimitiveType(enum.Enum):
     null = "null"
 
 
+class InterfaceDef:
+    def __init__(self, name):
+        self.name = name
+        self.protypes = list()
+
+    
+    def add_prototype(self, protype):
+        self.protypes.append(protype)
+
+
 class ClassDef_type:
     classes = list()
 
@@ -90,4 +100,23 @@ def recognize_golbal_function(node):
     test_functions.append(FuncDef(name, None, in_types, ret_type))
 
         
-        
+def recognize_global_interface(node):     
+    name = node.children[1].children[0].data
+    interface = InterfaceDef(name)
+    for fchild in node.children:
+        if fchild.data == "Prototype" :
+            interface.add_prototype(load_prototype(fchild))
+    test_interfaces.append(interface)
+
+
+def load_prototype(node):
+    ret_type = get_type(node)
+    name = node.children[1].children[0].data
+    in_types = list()
+    formals = node.children[3]
+    if len(formals.children) >= 1:
+        in_types.append(get_type(formals.children[0]))
+        formals_continue = formals.children[1]
+        for fchild in formals_continue.children:
+            in_types.append(get_type(fchild))
+    return FuncDef(name, None, in_types, ret_type)
