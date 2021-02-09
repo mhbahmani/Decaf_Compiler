@@ -13,7 +13,7 @@ class Node:
 
     
     def get_type(self):
-        return aselfttr['type']
+        return self.attr['type']
 
 
     def set_type(self, type):
