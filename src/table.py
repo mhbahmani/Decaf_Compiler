@@ -46,3 +46,14 @@ class ClassDef:
         self.variables = list()
         self.functions = list()
 
+
+def init_decls(node):
+    for child in node.children:
+        if node.data == "VariableDecl":
+            intit_variable(child)
+        elif node.data == "FunctionDecl":
+            init_function(child)
+        elif node.data == "ClassDecl":
+            init_class(child)
+        elif node.data == "InterfaceDecl":
+            init_interface(child)
