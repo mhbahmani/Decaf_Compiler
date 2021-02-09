@@ -30,22 +30,24 @@ FunctionDecl : Type T_ID '(' Formals ')' StmtBlock
         | T_VOID T_ID '(' Formals ')' StmtBlock
         | T_ID T_ID '(' Formals ')' StmtBlock
 
-Formals : (ariable FormalsContinue)?
+Formals : (Variable FormalsContinue)?
 
-FormalsContinue : (',' Variable FormalsContinue)*
+FormalsContinue : (',' Variable)*
 
 ClassDecl : T_CLASS T_ID Extends Implements  '{' Field* '}'
 
-Extends : (T_EXTENDS T_ID)?
+Extends : T_EXTENDS T_ID
+        | nothing
 
-Implements : (T_IMPLEMENTS T_ID Ids)?
+Implements : T_IMPLEMENTS T_ID Ids
+        |nothing
 
 Ids : (',' T_ID)*
 
 Fields : Field*
 
-Field : (AccessMode)? VariableDecl
-        | (AccessMode)? FunctionDecl
+Field : (AccessMode|nothing) VariableDecl
+        | (AccessMode|nothing) FunctionDecl
 
 AccessMode : T_PRIVATE
         | T_PROTECTED

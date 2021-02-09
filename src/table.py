@@ -55,10 +55,21 @@ class ClassDef_type:
 
 
 class ClassDef:
-     def __init__(self, name):
+    def __init__(self, name):
         self.name = name
         self.variables = list()
         self.functions = list()
+
+
+    def add_variable(self, variable):
+        self.variables.append(variable)
+
+
+    def add_function(self, function):
+        self.functions.append(function)
+
+
+    
 
 
 def init_decls(node):
@@ -120,3 +131,9 @@ def load_prototype(node):
         for fchild in formals_continue.children:
             in_types.append(get_type(fchild)[1])
     return FuncDef(name, None, in_types, ret_type)
+
+
+
+def recognize_global_class(node):
+    pass
+
