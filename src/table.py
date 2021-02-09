@@ -110,13 +110,13 @@ def recognize_global_interface(node):
 
 
 def load_prototype(node):
-    ret_type = get_type(node)
+    ret_type = get_type(node)[1]
     name = node.children[1].children[0].data
     in_types = list()
     formals = node.children[3]
     if len(formals.children) >= 1:
-        in_types.append(get_type(formals.children[0]))
+        in_types.append(get_type(formals.children[0])[1])
         formals_continue = formals.children[1]
         for fchild in formals_continue.children:
-            in_types.append(get_type(fchild))
+            in_types.append(get_type(fchild)[1])
     return FuncDef(name, None, in_types, ret_type)

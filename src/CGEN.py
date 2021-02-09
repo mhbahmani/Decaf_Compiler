@@ -25,10 +25,12 @@ def find_name(node):
 
 def find_type(node):
     temp_type = node.children[0]
+    if temp_type.data == "T_VOID":
+        return False, "void"
     if temp_type.data == "T_ID":
-        return temp_type.children[0].data
+        return False, temp_type.children[0].data
     else :
         if temp_type.children[0] == "Type" or temp_type.children[0] == "T_ID":
-            pass
+            return True, temp_type
         else :
-            return true, temp_type.children[0].children[0].data
+            return False, temp_type.children[0].children[0].data
