@@ -78,12 +78,7 @@ def recognize_class_functions(node):
 
 
 def recognize_class_functions(node):
-    ret_type = None
-    temp_type = get_type(node)
-    if temp_type:
-        ret_type = temp_type[1]
-    else :
-        ret_type = temp_type[1:]
+    ret_type = get_type(node)
     name = node.children[1].children[0].data
     in_types = list()
     formals = node.children[3]
@@ -91,7 +86,7 @@ def recognize_class_functions(node):
         in_types.append(get_type(formals.children[0]))
         formals_continue = formals.children[1]
         for fchild in formals_continue.children:
-            in_types.append(get_type(f))
+            in_types.append(get_type(fchild))
     test_functions.append(FuncDef(name, None, in_types, ret_type))
 
         
