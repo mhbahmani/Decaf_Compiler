@@ -1,8 +1,9 @@
-from table import init_decls
+from table import init_decls, ecognize_class_functions
 from mipsCodes import emit_comment
 
 def cgen(node):
     node = node.children[0]
+    recognize_class_functions(node)
     init_decls(node)
 
 

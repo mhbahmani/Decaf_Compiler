@@ -1,6 +1,9 @@
 import enum
-from CGEN import cgen_global_variable
+from CGEN import cgen_global_variable, get_type
 
+test_classes = list()
+test_interfaces = list()
+test_functions = list()
 
 class FuncDef:
     def __init__(self, name, lable, inputs_type, return_type):
@@ -61,3 +64,35 @@ def init_decls(node):
     for child in node.children:
         if node.data == "FunctionDecl":
             init_function(child)
+
+
+
+def recognize_class_functions(node):
+    for child in node.children:
+        if node.data == "FunctionDecl":
+            recognize_golbal_function(child)
+        elif node.data == "InterfaceDecl":
+            recognize_global_interface(child)
+        elif node.data == "ClassDecl":
+            recognize_global_class(child)
+
+
+def recognize_class_functions(node):
+    ret_type = None
+    temp_type = get_type(node)
+    if temp_type:
+        ret_type = temp_type[1]
+    else :
+        ret_type = temp_type[1:]
+    name = node.children[1].children[0].data
+    in_types = list()
+    formals = node.children[3]
+    if len(formals.children) >= 1:
+        in_types.append(get_type(formals.children[0]))
+        formals_continue = formals.children[1]
+        for fchild in formals_continue.children:
+            in_types.append(get_type(f))
+    test_functions.append(FuncDef(name, None, in_types, ret_type))
+
+        
+        
