@@ -1,10 +1,12 @@
 import enum
 from CGEN import cgen_global_variable, get_type, get_varieble_data
+from parseTree import Node
 
 test_classes = list()
 test_interfaces = list()
 test_functions = list()
 test_variables = list()
+class_types = list()
 
 class FuncDef:
     def __init__(self, name, lable, inputs_type, return_type):
@@ -39,8 +41,6 @@ class InterfaceDef:
 
 
 class ClassDef_type:
-    classes = list()
-
     def __init__(self, name, parent, interfaces):
         self.name = name
         self.parent = parent
@@ -88,16 +88,16 @@ class AccessType(enum.Enum):
 
 def init_decls(node):
     for child in node.children:
-        if node.data == "VariableDecl":
+        if child.data == "VariableDecl":
             cgen_global_variable(child)
     for child in node.children:
-        if node.data == "InterfaceDecl":
+        if child.data == "InterfaceDecl":
             init_interface(child)
     for child in node.children:
-        if node.data == "ClassDecl":
+        if child.data == "ClassDecl":
             init_class(child)
     for child in node.children:
-        if node.data == "FunctionDecl":
+        if child.data == "FunctionDecl":
             init_function(child)
 
 
@@ -112,6 +112,7 @@ def recognize_class_functions(node):
             recognize_global_class(child)
         elif child.data  == "VariableDecl":
             recognize_global_variable(child)
+    set_class_types(node)
 
 
 def recognize_golbal_function(node):
@@ -210,3 +211,54 @@ def get_member_varieble(node):
 
 def get_member_function(node):
     return load_prototype(node)
+
+
+def set_class_types(node):
+    for fchild in node.children:
+        if fchild.data  == "ClassDecl":
+            #to do
+            pass
+
+
+
+
+def is_class(name):
+    for tclass in test_classes:
+        if tclass.name == name:
+            return True
+    return False
+
+
+
+def is_interface(name):
+    for inter in test_interfaces:
+        if inter.name = name:
+            return True
+    return False
+
+
+
+def get_interface(name):
+    for inter in test_interfaces:
+        if inter.name = name:
+            return inter
+    return None
+
+
+def get_class_type(name):
+    for tclass in class_types:
+        if tclass.name == name:
+            return tclass
+    return None
+
+
+def is_class_type(name):
+    for tclass in class_types:
+        if tclass.name == name:
+            return True
+    return False
+
+
+def is_type(type):
+    b = type in PrimitiveType and type != "null"
+    return b or is_class_type(type)
