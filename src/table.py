@@ -149,3 +149,15 @@ class Variable:
         self.type = type
         self.address = address
 
+
+class AddressType(enum.Enum):
+    Global = 0
+    Local = 1
+    Object = 2
+
+
+class Address:
+    def __init__(self, offset, type):
+        self.offset = offset
+        self.type = type
+
