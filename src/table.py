@@ -137,21 +137,30 @@ def recognize_global_interface(node):
 
 
 def load_prototype(node):
-    ret_type = get_type(node)[1]
+    ret_type = get_type(node)
     name = node.children[1].children[0].data
     in_types = list()
     formals = node.children[3]
     if len(formals.children) >= 1:
-        in_types.append(get_type(formals.children[0])[1])
+        in_types.append(get_type(formals.children[0]))
         formals_continue = formals.children[1]
         for fchild in formals_continue.children:
-            in_types.append(get_type(fchild)[1])
+            in_types.append(get_type(fchild))
     return FuncDef(name, None, in_types, ret_type)
 
 
 
 def recognize_global_class(node):
-    pass
+    name = node.children[1].children[0].data
+    new_class = ClassDef(name)
+    for fchild in node.children:
+        if fchild.data == "Field":
+            access_mode = get_access_mode(fchild)
+            field = fchild.children[1]
+            if field.data == "VariableDecl":
+                new_class.add_variable(get_member_varieble(field), access_mode)
+            elif field.data == "FunctionDecl":
+                new_class.add_function(get_member_function(field), access_mode)
 
 
 class Variable:
@@ -179,3 +188,25 @@ def recognize_global_variable(node):
     addr = Address(0, AddressType.Global)
     var = Variable(name, type, addr)
     test_variables.append(var)
+
+
+def get_access_mode(node):
+    mode = node.children[0].children[0].data
+    if mode == "T_PRIVATE":
+        return AccessType.Private
+    elif mode == "T_PROTECTED":
+        return AccessType.Protected
+    elif mode == "T_PUBLIC":
+        return AccessType.Public
+    elif mode == "nothing":
+        return AccessType.Nothing
+
+
+def get_member_varieble(node):
+    name, type = get_varieble_data(node)
+    addr = Address(0, AddressType.Object)
+    return Variable(name, type, addr)
+
+
+def get_member_function(node):
+    return load_prototype(node)
