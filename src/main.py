@@ -47,12 +47,13 @@ Ids : (',' T_ID)*
 
 Fields : Field*
 
-Field : (AccessMode|nothing) VariableDecl
-        | (AccessMode|nothing) FunctionDecl
+Field : AccessMode VariableDecl
+        | AccessMode FunctionDecl
 
 AccessMode : T_PRIVATE
         | T_PROTECTED
         | T_PUBLIC
+        | nothing
 
 InterfaceDecl : T_INTERFACE T_ID '{' Prototype* '}'
 

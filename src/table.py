@@ -64,19 +64,27 @@ class ClassDef:
     def __init__(self, name):
         self.name = name
         self.variables = list()
+        self.variables_access = list()
         self.functions = list()
+        self.functions_access = list()
 
 
-    def add_variable(self, variable):
+    def add_variable(self, variable, access):
         self.variables.append(variable)
+        self.variables_access.append(access)
 
 
-    def add_function(self, function):
+    def add_function(self, function, access):
         self.functions.append(function)
+        self.functions_access.append(access)
 
 
     
-
+class AccessType(enum.Enum):
+    Private = "private"
+    Protected = "protected"
+    Public = "public"
+    Nothing = "protected"
 
 def init_decls(node):
     for child in node.children:
