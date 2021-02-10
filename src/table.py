@@ -1,9 +1,10 @@
 import enum
-from CGEN import cgen_global_variable, get_type
+from CGEN import cgen_global_variable, get_type, get_varieble_data
 
 test_classes = list()
 test_interfaces = list()
 test_functions = list()
+test_variables = list()
 
 class FuncDef:
     def __init__(self, name, lable, inputs_type, return_type):
@@ -95,12 +96,14 @@ def init_decls(node):
 
 def recognize_class_functions(node):
     for child in node.children:
-        if node.data == "FunctionDecl":
+        if child.data == "FunctionDecl":
             recognize_golbal_function(child)
-        elif node.data == "InterfaceDecl":
+        elif child.data == "InterfaceDecl":
             recognize_global_interface(child)
-        elif node.data == "ClassDecl":
+        elif child.data == "ClassDecl":
             recognize_global_class(child)
+        elif child.data  == "VariableDecl":
+            recognize_global_variable(child)
 
 
 def recognize_golbal_function(node):
@@ -161,3 +164,10 @@ class Address:
         self.offset = offset
         self.type = type
 
+
+def recognize_global_variable(node):
+    node = node.children[0]
+    name, type = get_varieble_data(node)
+    addr = Address(0, AddressType.Global)
+    var = Variable(name, type, addr)
+    test_variables.append(var)
