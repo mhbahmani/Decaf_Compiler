@@ -142,3 +142,10 @@ def load_prototype(node):
 def recognize_global_class(node):
     pass
 
+
+class Variable:
+    def __init__(self, name, type, address):
+        self.name = name
+        self.type = type
+        self.address = address
+
