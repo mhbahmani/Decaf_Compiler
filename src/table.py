@@ -26,10 +26,15 @@ class InterfaceDef:
     def __init__(self, name):
         self.name = name
         self.protypes = list()
+        self.children = list()
 
     
     def add_prototype(self, protype):
         self.protypes.append(protype)
+
+
+    def add_child(self, child):
+        self.children.append(child)
 
 
 class ClassDef_type:
