@@ -17,18 +17,19 @@ VariableDecls : VariableDecl+
 VariableDecl : Variable ';'
 
 Variable : Type T_ID
-        | T_ID T_ID
 
-Type : T_INT
-        | T_DOUBLE
-        | T_BOOL
-        | T_STRING
-        | Type '[' ']'
-        | T_ID '[' ']'
+Type : T_INT (Array)+
+        | T_DOUBLE (Array)+
+        | T_BOOL (Array)+
+        | T_STRING (Array)+
+        | T_ID  (Array)+
+
+
+Array: '[]'
 
 FunctionDecl : Type T_ID '(' Formals ')' StmtBlock
         | T_VOID T_ID '(' Formals ')' StmtBlock
-        | T_ID T_ID '(' Formals ')' StmtBlock
+
 
 Formals : (Variable FormalsContinue)?
 
@@ -59,7 +60,7 @@ Prototypes : Prototype*
 
 Prototype : Type T_ID '(' Formals ')' ';'
         | T_VOID T_ID '(' Formals ')' ';'
-        | T_ID T_ID '(' Formals ')' ';'
+
 
 StmtBlock : '{' VariableDecls Stmt* '}'
 

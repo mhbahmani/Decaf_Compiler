@@ -27,10 +27,8 @@ def find_type(node):
     temp_type = node.children[0]
     if temp_type.data == "T_VOID":
         return False, "void"
-    if temp_type.data == "T_ID":
-        return False, temp_type.children[0].data
+    temp_type = temp_type.children[0]
+    if len(temp_type) > 1:
+        return True, temp_type.children[0].data, len(temp_type) - 1
     else :
-        if temp_type.children[0] == "Type" or temp_type.children[0] == "T_ID":
-            return True, temp_type
-        else :
-            return False, temp_type.children[0].children[0].data
+        return False, temp_type.children[0].data
