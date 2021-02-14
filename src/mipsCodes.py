@@ -1,9 +1,10 @@
 debug = True
-lable_cout = 0
+lable_count = 0
 
 def create_lable():
     out = "_l" + str(lable_count)
-    lable_cout += 1
+    lable_count += 1
+    return out
 
 
 def emit_comment(comment):
@@ -15,7 +16,7 @@ def emit(line):
     print(line)
 
 
-def emit_lable(label):
+def emit_lable(lable):
     print(lable + " :")
 
 
@@ -39,7 +40,15 @@ def emit_j(lable):
 
 
 def emit_jalr(register):
-    emit("jalr", register)
+    print("jalr", register)
+
+
+def emit_jr():
+    print("jr $ra")
+
+
+def emit_branch_zero(check, lable):
+    print("beqz " + check + ", " + lable)
 
 def emit_move(destination, source):
     print("move " + destination + ", " + source)
@@ -58,3 +67,31 @@ def emit_lw(destination, source, offset = 0, word = True):
 
 def emit_li(destination, imediate):
     print("li " + destination + ", " + imediate)
+
+
+def emit_mult_div(register1, register2, mult = True):
+    if mult:
+        print("mult " + register1 + ", " + register2)
+    else :
+        print("div " + register1 + ", " + register2)
+
+def emit_load_HI_LO(register, HI = True):
+    if HI:
+        print("mfhi " + register)
+    else :
+        print("mflo " + register)
+
+
+data_section = '''.data
+__true:
+    .asciiz "true"
+__false:
+    .asciiz "false"
+'''
+
+def add_data(lable, definition):
+    data_section += lable + " :\n" + definition
+
+
+def print_data_section():
+    print(data_section)
