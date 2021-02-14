@@ -3,7 +3,7 @@ from lark import Lark
 from parseTree import build_parser_tree
 import sys
 
-grammer = """
+grammer = r"""
 start : program
 
 nothing :
