@@ -1,5 +1,7 @@
 from lark import Lark
-import sys, getopt
+from CGEN import cgen
+from parseTree import build_parser_tree
+import sys
 
 grammer = """
 Start : Program
@@ -222,7 +224,16 @@ def main(argv):
     if _output == '':
         sys.stderr.write('no output file provided!\n')
         sys.exit(2)
-    return 0
+    
+    with open("tests/" + _input, "r") as input_file:
+        code = input_file.read()
+        lark_tree = parser.parse(code)
+        parseTree = build_parser_tree(lark_tree)
+
+    with open("out/" + _output, "w") as output_file:
+        sys.stdout = output_file
+        cgen(parseTree)
+        sys.stdout.close()
 
 
 if __name__ == "__main__":
