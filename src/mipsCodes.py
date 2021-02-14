@@ -1,9 +1,10 @@
 debug = True
-lable_cout = 0
+lable_count = 0
 
 def create_lable():
     out = "_l" + str(lable_count)
-    lable_cout += 1
+    lable_count += 1
+    return out
 
 
 def emit_comment(comment):
