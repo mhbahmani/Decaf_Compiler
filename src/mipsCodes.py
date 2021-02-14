@@ -80,3 +80,18 @@ def emit_load_HI_LO(register, HI = True):
         print("mfhi " + register)
     else :
         print("mflo " + register)
+
+
+data_section = '''.data
+__true:
+    .asciiz "true"
+__false:
+    .asciiz "false"
+'''
+
+def add_data(lable, definition):
+    data_section += lable + " :\n" + definition
+
+
+def print_data_section():
+    print(data_section)
