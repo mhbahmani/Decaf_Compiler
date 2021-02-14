@@ -1,4 +1,9 @@
 debug = True
+lable_cout = 0
+
+def create_lable():
+    out = "_l" + str(lable_count)
+    lable_cout += 1
 
 
 def emit_comment(comment):
@@ -29,7 +34,7 @@ def emit_syscal():
 def emit_jal(lable):
     print("jal " + lable)
 
-def emit_l(lable):
+def emit_j(lable):
     print("j " + lable)
 
 
@@ -37,6 +42,7 @@ def emit_jalr(register):
     emit("jalr", register)
 
 def emit_move(destination, source):
+    print("move " + destination + ", " + source)
 
 
 def emit_la(destination, lable):
