@@ -16,7 +16,7 @@ def emit(line):
     print(line)
 
 
-def emit_lable(label):
+def emit_lable(lable):
     print(lable + " :")
 
 
@@ -40,7 +40,7 @@ def emit_j(lable):
 
 
 def emit_jalr(register):
-    emit("jalr", register)
+    print("jalr", register)
 
 def emit_move(destination, source):
     print("move " + destination + ", " + source)
