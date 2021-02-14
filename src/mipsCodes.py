@@ -42,6 +42,14 @@ def emit_j(lable):
 def emit_jalr(register):
     print("jalr", register)
 
+
+def emit_jr():
+    print("jr $ra")
+
+
+def emit_branch_zero(check, lable):
+    print("beqz " + check + ", " + lable)
+
 def emit_move(destination, source):
     print("move " + destination + ", " + source)
 
@@ -59,3 +67,16 @@ def emit_lw(destination, source, offset = 0, word = True):
 
 def emit_li(destination, imediate):
     print("li " + destination + ", " + imediate)
+
+
+def emit_mult_div(register1, register2, mult = True):
+    if mult:
+        print("mult " + register1 + ", " + register2)
+    else :
+        print("div " + register1 + ", " + register2)
+
+def emit_load_HI_LO(register, HI = True):
+    if HI:
+        print("mfhi " + register)
+    else :
+        print("mflo " + register)
