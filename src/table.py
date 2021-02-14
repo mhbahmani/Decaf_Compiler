@@ -232,7 +232,7 @@ def is_class(name):
 
 def is_interface(name):
     for inter in test_interfaces:
-        if inter.name = name:
+        if inter.name == name:
             return True
     return False
 
@@ -240,7 +240,7 @@ def is_interface(name):
 
 def get_interface(name):
     for inter in test_interfaces:
-        if inter.name = name:
+        if inter.name == name:
             return inter
     return None
 
