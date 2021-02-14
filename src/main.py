@@ -1,4 +1,5 @@
 from lark import Lark
+import sys, getopt
 
 grammer = """
 Start : Program
@@ -200,12 +201,29 @@ MULTI_LINE_COMMENT: //\* [.\n]* \\\*/
 
 """
 
-parser = Lark(grammer, parser='lalr', debug=True)
+# parser = Lark(grammer, parser='lalr', debug=True)
 
 
-def main():
+def main(argv):
+    _input = ''
+    _output = ''
+    if (len(argv) % 2 != 0):
+        sys.stderr.write('invalid command, should be like: main.py -i <input file> -o <output file>\n')
+        sys.exit(2)
+    for i in range(0, len(argv), 2):
+        if (argv[i] == '-i' or argv[i] == '--ifile'):
+            _input = argv[i + 1]
+        elif (argv[i] == '-o' or argv[i] == '--ofile'):
+            _output = argv[i + 1]
+
+    if _input == '':
+        sys.stderr.write('no input file provided!\n')
+        sys.exit(2)
+    if _output == '':
+        sys.stderr.write('no output file provided!\n')
+        sys.exit(2)
     return 0
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv[1:])
