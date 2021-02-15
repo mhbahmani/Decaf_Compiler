@@ -320,7 +320,7 @@ class Scope:
         push_stack("$zero")
 
 
-    def store_and_update_fp():
+    def store_and_update_fp(self):
         push_stack("$fp")
         emit_move("$fp", "$sp")
         push_stack("$zero") #for ra
