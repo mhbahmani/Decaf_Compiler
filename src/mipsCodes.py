@@ -2,6 +2,7 @@ debug = True
 label_count = 0
 
 def create_label():
+    global label_count
     out = "_l" + str(label_count)
     label_count += 1
     return out
@@ -90,8 +91,10 @@ __false:
 '''
 
 def add_data(label, definition):
+    global data_section
     data_section += label + " :\n" + definition
 
 
 def print_data_section():
+    global data_section
     print(data_section)
