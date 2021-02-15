@@ -115,6 +115,8 @@ def recognize_class_functions(node):
             recognize_global_variable(child)
     set_class_types(node)
     cgen_global_variables()
+    if not check_main_function():
+        raise error()
 
 
 def recognize_golbal_function(node):
@@ -288,3 +290,12 @@ def find_global_variable(name, index):
     return False
 
     
+def check_main_function():
+    for i in test_functions:
+        if i.name == "main":
+            if i.return_type == PrimitiveType.integer:
+                if len(i.inputs_type) == 0:
+                    return True
+                return False
+            return False
+    return False
