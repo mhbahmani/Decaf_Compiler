@@ -178,7 +178,7 @@ class Variable:
 class AddressType(enum.Enum):
     Global = 0
     Local = 1
-    Object = 2
+
 
 
 class Address:
@@ -307,9 +307,19 @@ class ScopeHandler():
 
     
 class Scope:
-    def __init__(self, parent, is_global = false):
+    def __init__(self, parent, is_global = False):
             self.params = list()
             self.locals = list()
             self.parent = parent
             self.is_global  = is_global
+    
+    def add_param(self, type, name):
+        addr = Address(4*(len(self.params) + 1), AddressType.Local)
+        var = Variable(name, type, addr)
+        self.params.append(var)
+
+    def add_local(self, type, name):
+        addr = Address(-4*(len(self.locals) + 2), AddressType.Local)
+        var = Variable(name, type, addr)
+        self.locals.append(var)
 
