@@ -305,6 +305,12 @@ class ScopeHandler():
     def __init__(self):
         self.scops = list()
 
+    def add_scope(self):
+        if len(self.scops) > 0:
+            self.scops.append(Scope(self.scops[len(self.scops) - 1]))
+        else :
+            self.scops.append(Scope(None))
+
     
 class Scope:
     def __init__(self, parent, is_global = False):
