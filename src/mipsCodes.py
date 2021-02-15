@@ -104,5 +104,5 @@ def push_stack(source):
     emit_addi("$sp", "$sp", "-4")
     emit_sw(source, "sp")
 
-def emit_sw(destination, source, offset = 0):
-    print("sw " + destination + ", " + str(offset) + "(" + source + ")")
+def emit_sw(source, destinaton, offset = 0):
+    print("sw " + source + ", " + str(offset) + "(" + destination + ")")
