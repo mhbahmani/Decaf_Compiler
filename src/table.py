@@ -1,6 +1,7 @@
 import enum
 from CGEN import cgen_global_variable, get_type, get_varieble_data
 from parseTree import Node
+from mipsCodes  import emit_comment, add_data
 
 test_classes = list()
 test_interfaces = list()
@@ -113,6 +114,7 @@ def recognize_class_functions(node):
         elif child.data  == "VariableDecl":
             recognize_global_variable(child)
     set_class_types(node)
+    cgen_global_variables()
 
 
 def recognize_golbal_function(node):
@@ -262,3 +264,27 @@ def is_class_type(name):
 def is_type(type):
     b = type in PrimitiveType and type != "null"
     return b or is_class_type(type)
+
+
+
+def cgen_global_variables():
+    emit_comment("cgen global variables")
+    count = 0
+    for i in range(len(test_variables)):
+        if find_global_variable(test_variables[i].name, i):
+            raise error()
+        else :
+            test_variables[i].address.offset = 4 * count
+            count += 1
+    add_data("__global", ".space " + str(4 * count))
+
+
+def find_global_variable(name, index):
+    for j in range(len(test_variables)):
+        if j == index:
+            break
+        if test_variables[j].name == name:
+            return True
+    return False
+
+    
