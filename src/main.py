@@ -225,10 +225,11 @@ def main(argv):
         sys.stderr.write("no output file provided!\n")
         sys.exit(2)
     
-    with open("tests/" + _input, "r") as input_file:
+    with open(_input, "r") as input_file:
         code = input_file.read()
         lark_tree = parser.parse(code)
         parseTree = build_parser_tree(lark_tree)
+        print(parseTree)
 
     with open("out/" + _output, "w") as output_file:
         sys.stdout = output_file

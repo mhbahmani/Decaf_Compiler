@@ -16,7 +16,7 @@ def emit(line):
     print(line)
 
 
-def emit_lable(lable):
+def emit_label(label):
     print(lable + " :")
 
 
