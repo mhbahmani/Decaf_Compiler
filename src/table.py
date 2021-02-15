@@ -299,3 +299,17 @@ def check_main_function():
                 return False
             return False
     return False
+
+
+class ScopeHandler():
+    def __init__(self):
+        self.scops = list()
+
+    
+class Scope:
+    def __init__(self, parent, is_global = false):
+            self.params = list()
+            self.locals = list()
+            self.parent = parent
+            self.is_global  = is_global
+
