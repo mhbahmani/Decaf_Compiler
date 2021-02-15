@@ -195,7 +195,7 @@ T_INT_CONSTANT : /0[x|X][\da-fA-F]*/ | /\d+/
 T_DOUBLE_CONSTANT : /"[^"^\n]*"/
 WHITE_SPACE : /[ \r\f\s\t\n]/
 SINGLE_LINE_COMMENT : /\/\/[^\n]*/
-MULTI_LINE_COMMENT : //\* [.\n]* \\\*/
+MULTI_LINE_COMMENT : /\/\* [.\n]* \*\//
 %import common.WS -> WHITESPACE
 %ignore WHITE_SPACE
 %ignore SINGLE_LINE_COMMENT
