@@ -332,3 +332,14 @@ class Scope:
         self.locals.append(var)
         push_stack("$zero")
 
+
+    def find_variable(self, name):
+        for var in self.locals:
+            if var.name == name:
+                return var
+        for var in self.params:
+            if var.name == name:
+                return var
+        return None
+
+
