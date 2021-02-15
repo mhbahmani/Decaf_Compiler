@@ -6,7 +6,7 @@ import sys
 grammer = r"""
 start : program
 
-nothing :
+nothing : 
 
 program : decl+
 
@@ -21,11 +21,11 @@ variabledecl : variable ";"
 
 variable : type T_ID
 
-type : T_INT (array)+
-        | T_DOUBLE (array)+
-        | T_BOOL (array)+
-        | T_STRING (array)+
-        | T_ID  (array)+
+type : T_INT (array)*
+        | T_DOUBLE (array)*
+        | T_BOOL (array)*
+        | T_STRING (array)*
+        | T_ID  (array)*
 
 
 array: "[]"
@@ -58,7 +58,7 @@ accessmode : T_PRIVATE
         | T_PUBLIC
         | nothing
 
-interfacedecl : T_INTERFACE T_ID "{" prototype* "}"
+interfacedecl : T_INTERFACE T_ID "{" prototypes "}"
 
 prototypes : prototype*
 
