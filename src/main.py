@@ -191,7 +191,7 @@ T_LESS_THAN_EQUAL : "<="
 T_GREATER_THAN_EQUAL : ">="
 T_ID : /[a-zA-Z]([a-zA-Z0-9]|\_)*/
 T_STRING_CONSTANT : /\d+\.\d*[E,e]\+?\d+/ | /\d+\.\d*/
-T_INT_COSTANT : /0[x|X][\da-fA-F]*/ | /\d+/
+T_INT_CONSTANT : /0[x|X][\da-fA-F]*/ | /\d+/
 T_DOUBLE_CONSTANT : /"[^"^\n]*"/
 WHITE_SPACE : /[ \r\f\s\t\n]/
 SINGLE_LINE_COMMENT : /\/\/[^\n]*/
