@@ -311,6 +311,22 @@ class ScopeHandler():
         else :
             self.scops.append(Scope(None))
 
+
+    def find_variable(self, name):
+        if len(self.scops) < 1:
+            raise error()
+        s = self.scops[len(self.scops) - 1]
+        while s != None:
+            x = s.find_variable(name)
+            if x != None:
+                return x
+            s = s.parent
+        x = find_global_variable(name, len(test_variables))
+        if x == None:
+            raise error()
+        else :
+            return x
+
     
 class Scope:
     def __init__(self, parent, is_global = False):
