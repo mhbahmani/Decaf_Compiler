@@ -98,3 +98,11 @@ def add_data(label, definition):
 def print_data_section():
     global data_section
     print(data_section)
+
+
+def push_stack(source):
+    emit_addi("$sp", "$sp", "-4")
+    emit_sw(source, "sp")
+
+def emit_sw(destination, source, offset = 0):
+    print("sw " + destination + ", " + str(offset) + "(" + source + ")")
