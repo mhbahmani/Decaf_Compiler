@@ -3,7 +3,7 @@ from mipsCodes import emit_comment
 
 def cgen(node):
     emit(".text")
-    emit_lable("main")
+    emit_label("main")
     node = node.children[0]
     recognize_class_functions(node)
     init_decls(node)
