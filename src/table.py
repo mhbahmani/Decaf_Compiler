@@ -1,7 +1,7 @@
 import enum
 from CGEN import cgen_global_variable, get_type, get_varieble_data
 from parseTree import Node
-from mipsCodes  import emit_comment, add_data
+from mipsCodes  import emit_comment, add_data, push_stack, emit_move
 
 test_classes = list()
 test_interfaces = list()
@@ -317,9 +317,18 @@ class Scope:
         addr = Address(4*(len(self.params) + 1), AddressType.Local)
         var = Variable(name, type, addr)
         self.params.append(var)
+        push_stack("$zero")
+
+
+    def store_and_update_fp():
+        push_stack("$fp")
+        emit_move("$fp", "$sp")
+        push_stack("$zero") #for ra
+        
 
     def add_local(self, type, name):
         addr = Address(-4*(len(self.locals) + 2), AddressType.Local)
         var = Variable(name, type, addr)
         self.locals.append(var)
+        push_stack("$zero")
 
