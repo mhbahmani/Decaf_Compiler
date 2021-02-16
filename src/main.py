@@ -1,5 +1,5 @@
 from lark import Lark
-# from CGEN import cgen
+from CGEN import cgen
 from parseTree import build_parser_tree
 import sys
 
@@ -80,7 +80,9 @@ forstmt : T_FOR "(" nullexpr ";" expr ";" nullexpr ")" stmt
 ifstmt : T_IF "(" expr ")" stmt ifextra
 
 ifextra : T_ELSE stmt 
-        |nothhing
+        | nothing
+
+nothing :  
 
 whilestmt : T_WHILE "(" expr ")" stmt
 
@@ -142,8 +144,6 @@ constant : T_INT_CONSTANT
         | T_BOOL_CONSTANT
         | T_STRING_CONSTANT
         | T_NULL
-
-nothing : 
 
 T_ASSIGN : "="
 T_BOOL_CONSTANT : T_FALSE

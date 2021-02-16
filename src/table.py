@@ -87,37 +87,6 @@ class AccessType(enum.Enum):
     Public = "public"
     Nothing = "protected"
 
-def init_decls(node):
-    for child in node.children:
-        if child.data == "VariableDecl":
-            cgen_global_variable(child)
-    for child in node.children:
-        if child.data == "InterfaceDecl":
-            init_interface(child)
-    for child in node.children:
-        if child.data == "ClassDecl":
-            init_class(child)
-    for child in node.children:
-        if child.data == "FunctionDecl":
-            init_function(child)
-
-
-
-def recognize_class_functions(node):
-    for child in node.children:
-        if child.data == "FunctionDecl":
-            recognize_golbal_function(child)
-        elif child.data == "InterfaceDecl":
-            recognize_global_interface(child)
-        elif child.data == "ClassDecl":
-            recognize_global_class(child)
-        elif child.data  == "VariableDecl":
-            recognize_global_variable(child)
-    set_class_types(node)
-    cgen_global_variables()
-    if not check_main_function():
-        raise error()
-
 
 def recognize_golbal_function(node):
     ret_type = get_type(node)

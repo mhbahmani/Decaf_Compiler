@@ -1,4 +1,3 @@
-from table import init_decls, ecognize_class_functions
 from mipsCodes import emit_comment, create_lable, emit_lable, emit_j, emit
 from parseTree import Node
 
@@ -105,9 +104,40 @@ def cgen_break(node):
 
 
 def cgen_return(node):
-    emit_comment("cgen for return")
-    pass
-    #to do
+    emit_comment("cgen for break")
+    # checking validity of statement
+    func = node.ref_parent
+    while func is not None and func.data != "functiondecl":
+        func = func.ref_parent
+
+    # return isn't in any function!
+    if func is None:
+        raise FunctionError(
+            "Error in return node " + str(node) + ", return node must be use in a funcion!"
+        )
+
+    # return for void functions
+    if node.ref_child[0].data == "nothing":
+        if func.ref_child[0].data == "void":
+            emit_move("$sp", "$fp")
+            emit("jr $ra")
+            return
+        else:
+            raise TypeError(
+                "Error in return statement for function in node" + str(func) + ", function type must be void"
+            )
+
+    # return for non void functions
+    type = get_type(func.ref_child[0])  # type of parent function
+    expr = cgen_expr(node.ref_child[0])  # expr node of return
+
+    expr.attribute[AttName.address].load()
+    emit_move("$v0", "$s0")
+    emit_move("$sp", "$fp")
+    emit("jr $ra")
+
+    return node.ref_child[0].data != "nothing"
+
 
 
 def cgen_null_expr(node):
@@ -140,3 +170,34 @@ def cgen_stmt(node):
         cgen_print(child)
     elif child.data == "stmtblock":
         cgen_stmtblock(child)
+
+
+def init_decls(node):
+    for child in node.children:
+        if child.data == "VariableDecl":
+            cgen_global_variable(child)
+    for child in node.children:
+        if child.data == "InterfaceDecl":
+            init_interface(child)
+    for child in node.children:
+        if child.data == "ClassDecl":
+            init_class(child)
+    for child in node.children:
+        if child.data == "FunctionDecl":
+            init_function(child)
+
+
+def recognize_class_functions(node):
+    for child in node.children:
+        if child.data == "FunctionDecl":
+            recognize_golbal_function(child)
+        elif child.data == "InterfaceDecl":
+            recognize_global_interface(child)
+        elif child.data == "ClassDecl":
+            recognize_global_class(child)
+        elif child.data  == "VariableDecl":
+            recognize_global_variable(child)
+    set_class_types(node)
+    cgen_global_variables()
+    if not check_main_function():
+        raise error()
