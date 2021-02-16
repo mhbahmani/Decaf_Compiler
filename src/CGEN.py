@@ -70,6 +70,7 @@ def cgen_while(node):
 
 
 def cgen_for(node):
+    emit_comment("cgen for for")
     start_for_lable = create_lable()
     end_for_lable = create_lable()
     node.add_attribute("start", start_for_lable)
@@ -86,6 +87,7 @@ def cgen_for(node):
 
 
 def cgen_continue(node):
+    emit_comment("cgen for continiue")
     while node.data != "forstms" or node.data != "whilestms":
         if node.data == "functiondecl":
             raise error()
@@ -94,6 +96,7 @@ def cgen_continue(node):
 
 
 def cgen_break(node):
+    emit_comment("cgen for break")
     while node.data != "forstms" or node.data != "whilestms":
         if node.data == "functiondecl":
             raise error()
@@ -102,5 +105,6 @@ def cgen_break(node):
 
 
 def cgen_return(node):
+    emit_comment("cgen for return")
     pass
     #to do
