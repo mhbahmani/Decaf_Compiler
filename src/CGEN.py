@@ -93,5 +93,14 @@ def cgen_continue(node):
     emit_j(node.get_attribute("start"))
 
 
+def cgen_break(node):
+    while node.data != "forstms" or node.data != "whilestms":
+        if node.data == "functiondecl":
+            raise error()
+        node = node.parent
+    emit_j(node.get_attribute("end"))
 
 
+def cgen_return(node):
+    pass
+    #to do
