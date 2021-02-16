@@ -38,13 +38,18 @@ def find_type(node):
 
 
 def cgen_if(node):
+    emit_comment("cgen for if")
     else_lable = create_lable()
+    end_if_lable = create_lable()
+    node.add_attribute("else", else_lable)
+    node.add_attribute("end", end_if_lable)
     t1 = cgen_expr(node.children[2])
-    #emit_load() load parameter for jump
+    #emit_load() load parameter for jump to else
     cgen_stmt(node.children[4])
-    emit_lable(else_lable)
     if node.children[5].children[0].data == "T_ELSE":
-        end_if_lable = create_lable()
+        emit_j(node.get_attribute("end"))
+    emit_lable(node.get_attribute("else"))
+    if node.children[5].children[0].data == "T_ELSE":
         cgen_stmt(node.children[5].children[1])
         emit_lable(end_if_lable)
     #not complete
