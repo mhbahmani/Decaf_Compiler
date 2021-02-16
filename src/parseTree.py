@@ -27,6 +27,12 @@ class Node:
     def get_arr_length(self):
         return self.attr['arr_length']
 
+    def add_attribute(self, name, value):
+        self.attr[name] = value
+    
+    def get_attribute(self, name):
+        return self.attr[name]
+
 
 
 source = None
