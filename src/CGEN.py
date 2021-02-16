@@ -1,5 +1,6 @@
 from table import init_decls, ecognize_class_functions
-from mipsCodes import emit_comment, create_label, emit_label
+from mipsCodes import emit_comment, create_lable, emit_lable, emit_j
+from parseTree import Node
 
 def cgen(node):
     emit(".text")
@@ -47,3 +48,18 @@ def cgen_if(node):
         cgen_stmt(node.children[5].children[1])
         emit_label(end_if_lable)
     #not complete
+
+def cgen_while(node):
+    emit_comment("cgen for while")
+    start_while_lable = create_lable()
+    end_while_lable = create_lable()
+    node.add_attribute("end", end_while_lable)
+    node.add_attribute("start", start_while_lable)
+    emit_lable(start_while_lable)
+    t1 = cgen_expr(node.children[2])
+    #for jump to end
+    cgen_stmt(node.children[4])
+    emit_j(node.get_attribute("start"))
+    emit_lable(node.get_attribute("end"))
+
+
