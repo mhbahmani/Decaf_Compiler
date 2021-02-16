@@ -117,3 +117,26 @@ def cgen_null_expr(node):
         return None
     else :
         return cgen_expr(node)
+
+
+def cgen_stmt(node):
+    emit_comment("cgen for stmt")
+    child =  node.children[0]
+    if child.data == "nullexpr":
+        cgen_null_expr(child)
+    elif child.data == "ifstmt":
+        cgen_if(child)
+    elif child.data == "whilestmt":
+        cgen_while(chile)
+    elif child.data == "forstmt":
+        cgen_for(child)
+    elif child.data == "breakstmt":
+        cgen_break(chile)
+    elif child.data == "continuestmt":
+        cgen_continue(child)
+    elif child.data == "returnstmt":
+        cgen_return(child)
+    elif child.data == "printstmt":
+        cgen_print(child)
+    elif child.data == "stmtblock":
+        cgen_stmtblock(child)
