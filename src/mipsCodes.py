@@ -1,10 +1,10 @@
 debug = True
-label_count = 0
+lable_count = 0
 
 def create_lable():
-    global label_count
-    out = "_l" + str(label_count)
-    label_count += 1
+    global lable_count
+    out = "_l" + str(lable_count)
+    lable_count += 1
     return out
 
 
@@ -33,11 +33,11 @@ def emit_syscal():
     print("syscall")
 
 
-def emit_jal(label):
-    print("jal " + label)
+def emit_jal(lable):
+    print("jal " + lable)
 
-def emit_j(label):
-    print("j " + label)
+def emit_j(lable):
+    print("j " + lable)
 
 
 def emit_jalr(register):
@@ -48,15 +48,15 @@ def emit_jr():
     print("jr $ra")
 
 
-def emit_branch_zero(check, label):
-    print("beqz " + check + ", " + label)
+def emit_branch_zero(check, lable):
+    print("beqz " + check + ", " + lable)
 
 def emit_move(destination, source):
     print("move " + destination + ", " + source)
 
 
-def emit_la(destination, label):
-    print("la " + destination + ", " + label)
+def emit_la(destination, lable):
+    print("la " + destination + ", " + lable)
 
 
 def emit_lw(destination, source, offset = 0, word = True):
@@ -90,9 +90,9 @@ __false:
     .asciiz "false"
 '''
 
-def add_data(label, definition):
+def add_data(lable, definition):
     global data_section
-    data_section += label + " :\n" + definition
+    data_section += lable + " :\n" + definition
 
 
 def print_data_section():

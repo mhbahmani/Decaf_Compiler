@@ -1,10 +1,10 @@
 from table import init_decls, ecognize_class_functions
-from mipsCodes import emit_comment, create_lable, emit_lable, emit_j
+from mipsCodes import emit_comment, create_lable, emit_lable, emit_j, emit
 from parseTree import Node
 
 def cgen(node):
     emit(".text")
-    emit_label("main")
+    emit_lable("main")
     node = node.children[0]
     recognize_class_functions(node)
     init_decls(node)
@@ -38,15 +38,15 @@ def find_type(node):
 
 
 def cgen_if(node):
-    else_lable = create_label()
+    else_lable = create_lable()
     t1 = cgen_expr(node.children[2])
     #emit_load() load parameter for jump
     cgen_stmt(node.children[4])
-    emit_label(else_lable)
+    emit_lable(else_lable)
     if node.children[5].children[0].data == "T_ELSE":
-        end_if_lable = create_label()
+        end_if_lable = create_lable()
         cgen_stmt(node.children[5].children[1])
-        emit_label(end_if_lable)
+        emit_lable(end_if_lable)
     #not complete
 
 def cgen_while(node):
