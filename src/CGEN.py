@@ -68,3 +68,19 @@ def cgen_while(node):
     emit_lable(node.get_attribute("end"))
 
 
+
+def cgen_for(node):
+    start_for_lable = create_lable()
+    end_for_lable = create_lable()
+    node.add_attribute("start", start_for_lable)
+    node.add_attribute("end", end_for_lable)
+    emit_lable(node.get_attribute("start"))
+    cgen_null_expr(node.children[2])
+    t1 = cgen_expr(node.children[4])
+    #for jump to end and type check bool
+    cgen_stmt(node.children[8])
+    cgen_null_expr(node.children[6])
+    emit_j(node.get_attribute("start"))
+    emit_lable(node.get_attribute("end"))
+
+
