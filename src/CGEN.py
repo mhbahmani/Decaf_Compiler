@@ -84,3 +84,14 @@ def cgen_for(node):
     emit_lable(node.get_attribute("end"))
 
 
+
+def cgen_continue(node):
+    while node.data != "forstms" or node.data != "whilestms":
+        if node.data == "functiondecl":
+            raise error()
+        node = node.parent
+    emit_j(node.get_attribute("start"))
+
+
+
+
