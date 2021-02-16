@@ -108,3 +108,12 @@ def cgen_return(node):
     emit_comment("cgen for return")
     pass
     #to do
+
+
+def cgen_null_expr(node):
+    emit_comment("cgen for null expr")
+    node = node.children[0]
+    if node.data == "nothing":
+        return None
+    else :
+        return cgen_expr(node)
