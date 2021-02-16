@@ -83,7 +83,8 @@ stmts : stmt*
 
 ifstmt : T_IF "(" expr ")" stmt ifextra
 
-ifextra : (T_ELSE stmt)?
+ifextra : T_ELSE stmt 
+        |nothhing
 
 whilestmt : T_WHILE "(" expr ")" stmt
 
