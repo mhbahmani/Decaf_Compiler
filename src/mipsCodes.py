@@ -1,7 +1,7 @@
 debug = True
 label_count = 0
 
-def create_label():
+def create_lable():
     global label_count
     out = "_l" + str(label_count)
     label_count += 1
