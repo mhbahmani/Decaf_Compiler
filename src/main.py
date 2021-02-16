@@ -3,19 +3,17 @@ from lark import Lark
 from parseTree import build_parser_tree
 import sys
 
-grammer = r"""
+grammar = """
 start : program
 
-nothing : 
+program : (decl)+
 
-program : decl+
-
-decl : variabledecl
+decl : classdecl
         | functiondecl
-        | classdecl
+        | variabledecl
         | interfacedecl
 
-variabledecls : variabledecl+
+variabledecls : (variabledecl)+
 
 variabledecl : variable ";"
 
@@ -25,20 +23,18 @@ type : T_INT (array)*
         | T_DOUBLE (array)*
         | T_BOOL (array)*
         | T_STRING (array)*
-        | T_ID  (array)*
+        | T_ID (array)*
 
-
-array: "[]"
+array : "[]"
 
 functiondecl : type T_ID "(" formals ")" stmtblock
-        | T_VOID T_ID "(" formals ")" stmtblock
-
+                | T_VOID T_ID "(" formals ")" stmtblock
 
 formals : (variable formalscontinue)?
 
 formalscontinue : ("," variable)*
 
-classdecl : T_CLASS T_ID extends implements  "{" field* "}"
+classdecl : T_CLASS T_ID extends implements "{" field* "}"
 
 extends : T_EXTENDS T_ID
         | nothing
@@ -47,8 +43,6 @@ implements : T_IMPLEMENTS T_ID ids
         | nothing
 
 ids : ("," T_ID)*
-
-fields : field*
 
 field : accessmode variabledecl
         | accessmode functiondecl
@@ -65,8 +59,7 @@ prototypes : prototype*
 prototype : type T_ID "(" formals ")" ";"
         | T_VOID T_ID "(" formals ")" ";"
 
-
-stmtblock : "{" variabledecls stmt* "}"
+stmtblock : "{" variabledecl* stmt* "}"
 
 stmt : nullexpr ";"
         | ifstmt
@@ -78,8 +71,11 @@ stmt : nullexpr ";"
         | printstmt
         | stmtblock
 
+nullexpr : (expr)?
+
 stmts : stmt*
 
+forstmt : T_FOR "(" nullexpr ";" expr ";" nullexpr ")" stmt
 
 ifstmt : T_IF "(" expr ")" stmt ifextra
 
@@ -87,104 +83,100 @@ ifextra : (T_ELSE stmt)?
 
 whilestmt : T_WHILE "(" expr ")" stmt
 
-forstmt : T_FOR "(" nullexpr ";" expr ";" nullexpr ")" stmt
-
 returnstmt : T_RETURN nullexpr ";"
-
-breakstmt : T_BREAK ";"
 
 continuestmt : T_CONTINUE ";"
 
+breakstmt : T_BREAK ";"
+
 printstmt : T_PRINT "(" expr exprs ")" ";"
 
-expr : lvalue
-        | lvalue "=" expr
-        | T_ID
-        | T_ID "=" expr
-        | constant
+exprs : ("," expr)*
+
+expr :  expr1
+        | lvalue T_ASSIGN expr
+
+expr1 : expr1 T_AND expr2
+        | expr3
+
+expr2 : expr2 T_OR expr3
+        | expr3
+
+expr3 : expr3 ( T_EQUAL | T_NOT_EQUAL ) expr4
+        | expr4
+
+expr4 : expr4 (T_LESS_THAN_EQUAL | T_GREATER_THAN_EQUAL | ">" | "<" ) expr5
+        | expr5
+
+expr5 : expr5 ( "*" | "/" | "%" ) expr6
+        | expr6
+
+expr6 : expr6 ( "-" | "+" ) expr7
+        | expr7
+
+expr7 : ( "-" | "!" ) expr7
+        | expr8
+
+expr8 : constant
+        | lvalue
         | T_THIS
-        | call
-        | "(" expr ")"
-        | expr "+" expr
-        | expr "-" expr
-        | expr "*" expr
-        | expr "/" expr
-        | expr "%" expr
-        | expr "<" expr
-        | expr  T_LESS_THAN_EQUAL expr
-        | expr ">" expr
-        | expr T_GREATER_THAN_EQUAL expr
-        | expr T_EQUAL expr
-        | expr T_NOT_EQUAL expr
-        | expr T_AND expr
-        | expr T_OR expr
-        | "-" expr
-        | "!" expr
+        | call 
         | T_READINTEGER "(" ")"
         | T_READLINE "(" ")"
         | T_NEW T_ID
         | T_NEWARRAY "(" expr "," type ")"
-        | T_NEWARRAY "(" expr "," T_ID ")"
-        | T_ITOD "(" expr ")"
-        | T_DITOI "(" expr ")"
-        | T_ITOB "(" expr ")"
-        | T_BTOI "(" expr ")"
+        | "(" expr ")"
 
-nullexpr : (expr)?
+lvalue : T_ID
+        | expr8 "." T_ID 
+        | expr8 "[" expr "]"
 
-exprs : ("," expr)*
-
-lvalue : expr "." T_ID
-        | expr "[" expr "]"
-
-call : T_ID "(" actuals ")"
-        | expr "." T_ID "(" actuals ")"
+call : T_ID "(" actuals ")" 
+        | expr8 "." T_ID "(" actuals ")"  
 
 actuals : (expr exprs)?
 
 constant : T_INT_CONSTANT
         | T_DOUBLE_CONSTANT
-        | bool_constant
+        | T_BOOL_CONSTANT
         | T_STRING_CONSTANT
         | T_NULL
 
-bool_constant : T_TRUE
-	    | T_FALSE
+nothing : 
 
-T_VOID : "void"
-T_INT : "int"
-T_DOUBLE : "double"
-T_BOOL : "bool"
-T_STRING : "string"
-T_CLASS : "class"
-T_INTERFACE : "interface"
+T_ASSIGN : "="
+T_BOOL_CONSTANT : T_FALSE
+        | T_TRUE
 T_NULL : "null"
 T_THIS : "this"
-T_EXTENDS : "extends"
-T_IMPLEMENTS : "implemnts"
+T_VOID : "void"
 T_FOR : "for"
-T_WHILE : "while"
 T_IF : "if"
-T_ELSE : "else"
-T_RETURN : "return"
-T_BREAK : "break"
-T_CONTINUE : "continue"
+T_WHILE : "while"
+T_ELSE: "else"
+T_CLASS : "class"
+T_EXTENDS : "extends"
+T_INTERFACE : "interface"
+T_IMPLEMENTS : "implemnts"
 T_NEW : "new"
 T_NEWARRAY : "NewArray"
-T_PRINT : "Print"
-T_READINTEGER : "ReadInteger"
-T_READLINE : "ReadLine"
-T_DITOI : "ditol"
-T_ITOD : "itod"
-T_BTOI : "btoi"
-T_ITOB : "itob"
+T_INT : "int"
+T_DOUBLE : "double" 
+T_BOOL : "bool"
+T_STRING : "string"
 T_PRIVATE : "private"
 T_PROTECTED : "protected"
 T_PUBLIC : "public"
 T_TRUE : "true"
 T_FALSE : "false"
 T_AND : "&&"
-T_OR : "\|\|"
+T_OR : "||"
+T_RETURN : "return"
+T_BREAK : "break"
+T_CONTINUE : "continue"
+T_PRINT : "Print"
+T_READINTEGER : "ReadInteger"
+T_READLINE : "ReadLine"
 T_EQUAL : "=="
 T_NOT_EQUAL : "!="
 T_LESS_THAN_EQUAL : "<="
@@ -192,18 +184,17 @@ T_GREATER_THAN_EQUAL : ">="
 T_ID : /[a-zA-Z]([a-zA-Z0-9]|\_)*/
 T_STRING_CONSTANT : /\d+\.\d*[E,e]\+?\d+/ | /\d+\.\d*/
 T_INT_CONSTANT : /0[x|X][\da-fA-F]*/ | /\d+/
-T_DOUBLE_CONSTANT : /"[^"^\n]*"/
-WHITE_SPACE : /[ \r\f\s\t\n]/
-SINGLE_LINE_COMMENT : /\/\/[^\n]*/
-MULTI_LINE_COMMENT : /\/\* [.\n]* \*\//
+T_DOUBLE_CONSTANT : /"[^"^\\n]*"/
+SINGLE_LINE_COMMENT : /\/\/[^\\n]*/
+MULTI_LINE_COMMENT : /\/\* [.\\n]* \*\//
+
 %import common.WS -> WHITESPACE
-%ignore WHITE_SPACE
+%ignore WHITESPACE
 %ignore SINGLE_LINE_COMMENT
 %ignore MULTI_LINE_COMMENT
-
 """
 
-parser = Lark(grammer, parser="lalr", debug=True)
+parser = Lark(grammar, parser="lalr", debug=True)
 
 
 def main(argv):
