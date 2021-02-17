@@ -50,7 +50,7 @@ def cgen_if(node):
     emit_lable(node.get_attribute("else"))
     if node.children[5].children[0].data == "T_ELSE":
         cgen_stmt(node.children[5].children[1])
-        emit_lable(end_if_lable)
+        emit_lable(node.get_attribute("end"))
     #not complete
 
 def cgen_while(node):
@@ -59,7 +59,7 @@ def cgen_while(node):
     end_while_lable = create_lable()
     node.add_attribute("end", end_while_lable)
     node.add_attribute("start", start_while_lable)
-    emit_lable(start_while_lable)
+    emit_lable(node.get_attribute("start"))
     t1 = cgen_expr(node.children[2])
     #for jump to end and type check
     cgen_stmt(node.children[4])
@@ -74,8 +74,8 @@ def cgen_for(node):
     end_for_lable = create_lable()
     node.add_attribute("start", start_for_lable)
     node.add_attribute("end", end_for_lable)
-    emit_lable(node.get_attribute("start"))
     cgen_null_expr(node.children[2])
+    emit_lable(node.get_attribute("start"))
     t1 = cgen_expr(node.children[4])
     #for jump to end and type check bool
     cgen_stmt(node.children[8])

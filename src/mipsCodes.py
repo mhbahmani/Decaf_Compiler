@@ -10,7 +10,7 @@ def create_lable():
 
 def emit_comment(comment):
     if debug:
-        print("#" + comment)
+        print("# " + comment)
 
 
 def emit(line):
@@ -41,7 +41,7 @@ def emit_j(lable):
 
 
 def emit_jalr(register):
-    print("jalr", register)
+    print("jalr " + register)
 
 
 def emit_jr():

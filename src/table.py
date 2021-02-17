@@ -242,7 +242,7 @@ def cgen_global_variables():
     emit_comment("cgen global variables")
     count = 0
     for i in range(len(test_variables)):
-        if find_global_variable(test_variables[i].name, i):
+        if find_global_variable(test_variables[i].name, i) != None:
             raise error()
         else :
             test_variables[i].address.offset = 4 * count
@@ -255,8 +255,8 @@ def find_global_variable(name, index):
         if j == index:
             break
         if test_variables[j].name == name:
-            return True
-    return False
+            return test_variables[j]
+    return None
 
     
 def check_main_function():
@@ -276,13 +276,14 @@ class ScopeHandler():
 
     def add_scope(self):
         if len(self.scops) > 0:
-            self.scops.append(Scope(self.scops[len(self.scops) - 1]))
+            self.scops.append(Scope(self.scops[len(self.scops) - 1])) # scope is dynamic for funcs
         else :
             self.scops.append(Scope(None))
 
 
     def find_variable(self, name):
-        if len(self.scops) < 1:
+        x = find_global_variable(name, len(test_variables))
+        if len(self.scops) < 1 and x == None:
             raise error()
         s = self.scops[len(self.scops) - 1]
         while s != None:
