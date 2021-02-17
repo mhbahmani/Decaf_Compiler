@@ -297,6 +297,17 @@ class ScopeHandler():
         else :
             return x
 
+    def add_param(self, type, name):
+        self.scops[len(self.scops) - 1].add_param(type, name)
+
+
+    def store_and_update_fp(self):
+        self.scops[len(self.scops) - 1].store_and_update_fp()
+        
+
+    def add_local(self, type, name):
+        self.scops[len(self.scops) - 1].add_local(type, name)
+
     
 class Scope:
     def __init__(self, parent, is_global = False):
@@ -341,5 +352,7 @@ class Scope:
         var = Variable(name, type, addr)
         self.locals.append(var)
         push_stack("$zero")
+
+scope_handler = ScopeHandler()
 
 

@@ -1,5 +1,6 @@
 from mipsCodes import emit_comment, create_lable, emit_lable, emit_j, emit
 from parseTree import Node
+from table import scope_handler
 
 def cgen(node):
     emit(".text")
@@ -201,3 +202,8 @@ def recognize_class_functions(node):
     cgen_global_variables()
     if not check_main_function():
         raise Exception()
+
+
+def cgen_function(node):
+    node.children[5].add_attribute("in_func", True)
+    #to do
