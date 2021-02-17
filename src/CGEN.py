@@ -205,6 +205,7 @@ def recognize_class_functions(node):
 
 
 def cgen_function(node):
+    emit_comment("cgen for functondecl")
     node.children[5].add_attribute("in_func", True)
     #to do
 
