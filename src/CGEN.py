@@ -207,3 +207,17 @@ def recognize_class_functions(node):
 def cgen_function(node):
     node.children[5].add_attribute("in_func", True)
     #to do
+
+
+def cgen_stmtblock(node):
+    emit_comment("cgen for stmtblock")
+    if node.get_attribute("in_func"):
+        pass
+    else :
+        scope_handler.add_scope()
+    
+    for child in node.children:
+        if child.data == "variabledecl":
+            cgen_variable_delc(child)
+        elif child.data == "stmt":
+            cgen_stmt(child)
