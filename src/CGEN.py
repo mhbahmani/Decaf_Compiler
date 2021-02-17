@@ -89,7 +89,7 @@ def cgen_continue(node):
     emit_comment("cgen for continiue")
     while node.data != "forstms" or node.data != "whilestms":
         if node.data == "functiondecl":
-            raise error()
+            raise Exception()
         node = node.parent
     emit_j(node.get_attribute("start"))
 
@@ -98,7 +98,7 @@ def cgen_break(node):
     emit_comment("cgen for break")
     while node.data != "forstms" or node.data != "whilestms":
         if node.data == "functiondecl":
-            raise error()
+            raise Exception()
         node = node.parent
     emit_j(node.get_attribute("end"))
 
@@ -112,7 +112,7 @@ def cgen_return(node):
 
     # return isn't in any function!
     if func is None:
-        raise FunctionError(
+        raise Exception(
             "Error in return node " + str(node) + ", return node must be use in a funcion!"
         )
 
@@ -123,7 +123,7 @@ def cgen_return(node):
             emit("jr $ra")
             return
         else:
-            raise TypeError(
+            raise Exception(
                 "Error in return statement for function in node" + str(func) + ", function type must be void"
             )
 
@@ -200,4 +200,4 @@ def recognize_class_functions(node):
     set_class_types(node)
     cgen_global_variables()
     if not check_main_function():
-        raise error()
+        raise Exception()

@@ -243,7 +243,7 @@ def cgen_global_variables():
     count = 0
     for i in range(len(test_variables)):
         if find_global_variable(test_variables[i].name, i) != None:
-            raise error()
+            raise Exception()
         else :
             test_variables[i].address.offset = 4 * count
             count += 1
@@ -284,7 +284,7 @@ class ScopeHandler():
     def find_variable(self, name):
         x = find_global_variable(name, len(test_variables))
         if len(self.scops) < 1 and x == None:
-            raise error()
+            raise Exception()
         s = self.scops[len(self.scops) - 1]
         while s != None:
             x = s.find_variable(name)
@@ -293,7 +293,7 @@ class ScopeHandler():
             s = s.parent
         x = find_global_variable(name, len(test_variables))
         if x == None:
-            raise error()
+            raise Exception()
         else :
             return x
 
