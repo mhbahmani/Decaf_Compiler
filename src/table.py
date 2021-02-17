@@ -304,6 +304,7 @@ class Scope:
             self.locals = list()
             self.parent = parent
             self.is_global  = is_global
+            self.temp_count = 0
     
     def add_param(self, type, name):
         addr = Address(4*(len(self.params) + 1), AddressType.Local)
@@ -333,5 +334,12 @@ class Scope:
             if var.name == name:
                 return var
         return None
+
+    def add_temprory(self, type):
+        name = "_t" + str(self.temp_count):
+        addr = Address(-4*(len(self.locals) + 2), AddressType.Local)
+        var = Variable(name, type, addr)
+        self.locals.append(var)
+        push_stack("$zero")
 
 
