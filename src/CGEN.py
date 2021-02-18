@@ -219,7 +219,13 @@ def cgen_stmtblock(node):
     
     for child in node.children:
         if child.data == "variabledecl":
-            cgen_variable_delc(child)
+            cgen_variable_delc(child.children[0])
         elif child.data == "stmt":
             cgen_stmt(child)
     #delete scope
+
+
+def cgen_variable_delc(node):
+    name, type_var = get_varieble_data(node)
+    scope_handler.add_local(type_var, name)
+
