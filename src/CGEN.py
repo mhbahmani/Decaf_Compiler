@@ -50,60 +50,70 @@ def cgen_expr(node):
         if node.children[0].data == 'expr':
             return cgen_expr(node.children[0])
         elif node.children[0].data == 'T_READLINE':
-            return cgen_readline(node.children[0])
+            return cgen_readline(node.children[0]) # TODO define used cgen function, remove this when function added
         elif node.children[0].data == 'T_READINTEGER':
             return cgen_readint(node.children[0])
         elif node.children[0].data == 'call':
-            return cgen_call(node.children[0])
+            return cgen_call(node.children[0]) # TODO define used cgen function, remove this when function added
         elif node.children[0].data == 'T_THIS':
             raise Exception()
         elif node.children[0].data == 'lvalue':
-            return cgen_lvalue(node.children[0])
+            return cgen_lvalue(node.children[0]) # TODO define used cgen function, remove this when function added
         elif node.children[0].data == 'constant':
             return cgen_constant(node.children[0])
 
     elif len(node.children) == 2:
         if node.children[0].data == '!':
-            return cgen_expr_not(node.children[0])
+            return cgen_expr_not(node)
         elif node.children[0].data == '-':
-            return cgen_expr_neg(node.children[0])
+            return cgen_expr_neg(node)
         elif node.children[0].data == 'T_NEW':
-            return cgen_expr_new(node.children[0])
+            return cgen_expr_new(node) # TODO define used cgen function, remove this when function added
 
     elif len(node.children) == 3:
         if node.children[1].data == 'T_ASSIGN':
-            return cgen_expr_assign(node)
+            return cgen_expr_assign(node) # TODO define used cgen function, remove this when function added
         elif node.children[1].data == 'T_OR':
-            return cgen_expr_or(node)
+            return cgen_expr_or(node) # TODO define used cgen function, remove this when function added
         elif node.children[1].data == 'T_AND':
-            return cgen_expr_and(node)
+            return cgen_expr_and(node) # TODO define used cgen function, remove this when function added
         elif node.children[1].data == 'T_EQUAL':
-            return cgen_expr_equal(node)
+            return cgen_expr_equal(node) # TODO define used cgen function, remove this when function added
         elif node.children[1].data == 'T_NOT_EQUAL':
-            return cgen_expr_not_equal(node)
+            return cgen_expr_not_equal(node) # TODO define used cgen function, remove this when function added
         elif node.children[1].data == 'T_GREATER_THAN_EQUAL':
-            return cgen_expr_ge(node)
+            return cgen_expr_ge(node) # TODO define used cgen function, remove this when function added
         elif node.children[1].data == '>':
-            return cgen_expr_g(node)
+            return cgen_expr_g(node) # TODO define used cgen function, remove this when function added
         elif node.children[1].data == 'T_LESS_THAN_EQUAL':
-            return cgen_expr_le(node)
+            return cgen_expr_le(node) # TODO define used cgen function, remove this when function added
         elif node.children[1].data == '<':
-            return cgen_expr_l(node)
+            return cgen_expr_l(node) # TODO define used cgen function, remove this when function added
         elif node.children[1].data == '-':
-            return cgen_expr_sub(node)
+            return cgen_expr_sub(node) # TODO define used cgen function, remove this when function added
         elif node.children[1].data == '+':
-            return cgen_expr_add(node)
+            return cgen_expr_add(node) # TODO define used cgen function, remove this when function added
         elif node.children[1].data == '*':
-            return cgen_expr_mul(node)
+            return cgen_expr_mul(node) # TODO define used cgen function, remove this when function added
         elif node.children[1].data == '/':
-            return cgen_expr_div(node)
+            return cgen_expr_div(node) # TODO define used cgen function, remove this when function added
         elif node.children[1].data == '%':
-            return cgen_expr_mod(node)
+            return cgen_expr_mod(node) # TODO define used cgen function, remove this when function added
         elif node.children[1].data == 'expr':
             if node.children[0].data == '(':
                 return cgen_expr(node.children[1])
             elif node.children[0].data == 'T_NEWARRAY':
-                return cgen_new_array(node)
+                return cgen_new_array(node) # TODO define used cgen function, remove this when function added
+
+
+def cgen_expr_not(node): # TODO check
+    operand = cgen_expr(node.children[0])
+    return 1 - operand
+
+
+def cgen_expr_neg(node): # TODO check
+    operand = cgen_expr(node.children[0])
+    return -operand
 
 
 def cgen_constant(node): # TODO check !!!IMPORTANT
