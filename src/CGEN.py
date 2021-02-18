@@ -1,6 +1,6 @@
 from mipsCodes import emit_comment, create_lable, emit_lable, emit_j, emit
 from parseTree import Node
-from table import scope_handler
+from table import scope_handler, PrimitiveType
 
 def cgen(node):
     emit(".text")
@@ -35,6 +35,75 @@ def find_type(node):
     else :
         return temp_type.children[0].children[0].data
 
+
+def cgen_expr(node):
+    if len(node.children) == 1:
+        if node.children[0].data == 'expr':
+            return cgen_expr(node.children[0])
+        elif node.children[0].data == 'T_READLINE':
+            return cgen_readline(node.children[0])
+        elif node.children[0].data == 'T_READINTEGER':
+            return cgen_readint(node.children[0])
+        elif node.children[0].data == 'call':
+            return cgen_call(node.children[0])
+        elif node.children[0].data == 'T_THIS':
+            return cgen_this(node.children[0])
+        elif node.children[0].data == 'lvalue':
+            return cgen_lvalue(node.children[0])
+        elif node.children[0].data == 'constant':
+            return cgen_constant(node.children[0])
+
+    elif len(node.children) == 2:
+        if node.children[0].data == '!':
+            return cgen_expr_not(node.children[0])
+        elif node.children[0].data == '-':
+            return cgen_expr_neg(node.children[0])
+        elif node.children[0].data == 'T_NEW':
+            return cgen_expr_new(node.children[0])
+
+    elif len(node.children) == 3:
+        if node.children[1].data == 'T_ASSIGN':
+            return cgen_expr_assign(node)
+        elif node.children[1].data == 'T_OR':
+            return cgen_expr_bitor(node)
+        elif node.children[1].data == 'T_AND':
+            return cgen_expr_bitand(node)
+        elif node.children[1].data == 'T_EQUAL':
+            return cgen_expr_equal(node)
+        elif node.children[1].data == 'T_NOT_EQUAL':
+            return cgen_expr_nequal(node)
+        elif node.children[1].data == 'T_GREATER_THAN_EQUAL':
+            return cgen_expr_grq(node)
+        elif node.children[1].data == '>':
+            return cgen_expr_gr(node)
+        elif node.children[1].data == 'T_LESS_THAN_EQUAL':
+            return cgen_expr_leq(node)
+        elif node.children[1].data == '<':
+            return cgen_expr_le(node)
+        elif node.children[1].data == '-':
+            return cgen_expr_sub(node)
+        elif node.children[1].data == '+':
+            return cgen_expr_add(node)
+        elif node.children[1].data == '*':
+            return cgen_expr_mul(node)
+        elif node.children[1].data == '/':
+            return cgen_expr_div(node)
+        elif node.children[1].data == '%':
+            return cgen_expr_mod(node)
+        elif node.children[1].data == 'expr':
+            if node.children[0].data == '(':
+                return cgen_expr(node.children[1])
+            elif node.children[0].data == 'T_NEWARRAY':
+                return cgen_new_array(node)
+
+
+def cgen_readint(node): # TODO check
+    emit_li('$v0', '5')
+    emit_syscal()
+    integer = scope_handler.add_temp(PrimitiveType.integer)
+    # load integer into data section
+    emit_sw('$v0', '$fp', integer.address.offset)
+    return integer
 
 
 def cgen_if(node):
