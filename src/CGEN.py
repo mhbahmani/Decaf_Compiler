@@ -222,3 +222,4 @@ def cgen_stmtblock(node):
             cgen_variable_delc(child)
         elif child.data == "stmt":
             cgen_stmt(child)
+    #delete scope
