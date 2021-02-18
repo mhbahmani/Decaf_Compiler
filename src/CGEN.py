@@ -1,6 +1,6 @@
 from mipsCodes import emit_comment, create_lable, emit_lable, emit_j, emit
 from parseTree import Node
-from table import scope_handler
+from table import scope_handler, PrimitiveType
 
 def cgen(node):
     emit(".text")
@@ -95,6 +95,15 @@ def cgen_expr(node):
                 return cgen_expr(node.children[1])
             elif node.children[0].data == 'T_NEWARRAY':
                 return cgen_new_array(node)
+
+
+def cgen_readint(node): # TODO check
+    emit_li('$v0', '5')
+    emit_syscal()
+    integer = scope_handler.add_temp(PrimitiveType.integer)
+    # load integer into data section
+    emit_sw('$v0', '$fp', integer.address.offset)
+    return integer
 
 
 def cgen_if(node):
