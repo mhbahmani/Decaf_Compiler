@@ -92,11 +92,12 @@ __true:
     .asciiz "true"
 __false:
     .asciiz "false"
+
 '''
 
 def add_data(lable, definition):
     global data_section
-    data_section += lable + " :\n" + definition
+    data_section += lable + ":\n" + definition + "\n"
 
 
 def print_data_section():

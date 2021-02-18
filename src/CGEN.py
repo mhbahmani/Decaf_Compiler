@@ -1,6 +1,15 @@
-from mipsCodes import emit_comment, create_lable, emit_lable, emit_j, emit
+from mipsCodes import add_data, emit_comment, create_lable, emit_lable, emit_j, emit, emit_li, emit_syscal, emit_sw
 from parseTree import Node
 from table import scope_handler, PrimitiveType
+
+def data_label():
+    num = 0
+    while True:
+        yield '__const' + str(num)
+        num += 1
+
+data_label_generator = data_label()
+
 
 def cgen(node):
     emit(".text")
@@ -47,7 +56,7 @@ def cgen_expr(node):
         elif node.children[0].data == 'call':
             return cgen_call(node.children[0])
         elif node.children[0].data == 'T_THIS':
-            return cgen_this(node.children[0])
+            raise Exception()
         elif node.children[0].data == 'lvalue':
             return cgen_lvalue(node.children[0])
         elif node.children[0].data == 'constant':
@@ -65,21 +74,21 @@ def cgen_expr(node):
         if node.children[1].data == 'T_ASSIGN':
             return cgen_expr_assign(node)
         elif node.children[1].data == 'T_OR':
-            return cgen_expr_bitor(node)
+            return cgen_expr_or(node)
         elif node.children[1].data == 'T_AND':
-            return cgen_expr_bitand(node)
+            return cgen_expr_and(node)
         elif node.children[1].data == 'T_EQUAL':
             return cgen_expr_equal(node)
         elif node.children[1].data == 'T_NOT_EQUAL':
-            return cgen_expr_nequal(node)
+            return cgen_expr_not_equal(node)
         elif node.children[1].data == 'T_GREATER_THAN_EQUAL':
-            return cgen_expr_grq(node)
+            return cgen_expr_ge(node)
         elif node.children[1].data == '>':
-            return cgen_expr_gr(node)
+            return cgen_expr_g(node)
         elif node.children[1].data == 'T_LESS_THAN_EQUAL':
-            return cgen_expr_leq(node)
-        elif node.children[1].data == '<':
             return cgen_expr_le(node)
+        elif node.children[1].data == '<':
+            return cgen_expr_l(node)
         elif node.children[1].data == '-':
             return cgen_expr_sub(node)
         elif node.children[1].data == '+':
@@ -95,6 +104,50 @@ def cgen_expr(node):
                 return cgen_expr(node.children[1])
             elif node.children[0].data == 'T_NEWARRAY':
                 return cgen_new_array(node)
+
+
+def cgen_constant(node): # TODO check !!!IMPORTANT
+    if node.children[0].data == 'T_INT_CONSTANT':
+        value = node.children[0].data
+        if (value[:2].lower() == '0x'):
+            value = str(int(value[2:], 16))
+        label = next(data_label_generator)
+        
+        add_data(label, value)
+
+        return value
+
+    elif node.children[0].data == 'T_DOUBLE_CONSTANT':
+        value = node.children[0].data
+        label = next(data_label_generator)
+        
+        add_data(label, value)
+
+        return value
+
+    elif node.children[0].data == 'T_BOOL_CONSTANT':
+        value = node.children[0].data
+        if (value == 'true'):
+            value = '1'
+        else:
+            value = '0'
+        label = next(data_label_generator)
+        
+        add_data(label, value)
+
+        return value
+
+    elif node.children[0].data == 'T_STRING_CONSTANT':
+        value = node.children[0].data
+        value = '"' + value + '"'
+        label = next(data_label_generator)
+        
+        add_data(label, value)
+
+        return value
+
+    elif node.children[0].data == 'T_NULL':
+        pass # TODO
 
 
 def cgen_readint(node): # TODO check
