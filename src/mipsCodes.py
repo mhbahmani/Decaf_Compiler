@@ -134,3 +134,12 @@ def emit_dtoi():
     emit("round.w.s $f0, $f0")
     emit("mfc1 $v0, $f0")
     emit_jr()
+
+def  emit_itod():
+    emit_lable("___itod")
+    emit_lw("$s0", "$fp", 4)
+    emit("mtc1 $s0, $f0")
+    emit("cvt.s.w $f0, $f0")
+    emit("mfc1 $v0, $f0")
+    emit_jr()
+
