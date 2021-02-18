@@ -106,3 +106,15 @@ def push_stack(source):
 
 def emit_sw(source, destinaton, offset = 0):
     print("sw " + source + ", " + str(offset) + "(" + destinaton + ")")
+
+
+
+def emit_itob():
+    emit_lable("___itob")
+    emit_lw("$s0", "$fp", 4)
+    emit_li("$v0", "0")
+    emit_branch_zero("$s0", "___itob_ret")
+    emit_li("$v0", "1")
+    emit_lable("___itob_ret")
+    emit_jr()
+    
