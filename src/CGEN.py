@@ -158,11 +158,11 @@ def cgen_stmt(node):
     elif child.data == "ifstmt":
         cgen_if(child)
     elif child.data == "whilestmt":
-        cgen_while(chile)
+        cgen_while(child)
     elif child.data == "forstmt":
         cgen_for(child)
     elif child.data == "breakstmt":
-        cgen_break(chile)
+        cgen_break(child)
     elif child.data == "continuestmt":
         cgen_continue(child)
     elif child.data == "returnstmt":
