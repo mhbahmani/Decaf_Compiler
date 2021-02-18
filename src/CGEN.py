@@ -212,14 +212,17 @@ def cgen_function(node):
 
 def cgen_stmtblock(node):
     emit_comment("cgen for stmtblock")
-    scope_handler.add_scope(node.get_attribute("in_func"))
+    if node.get_attribute("in_func"):
+        pass
+    else :
+        scope_handler.add_scope(False)
     
     for child in node.children:
         if child.data == "variabledecl":
             cgen_variable_delc(child.children[0])
         elif child.data == "stmt":
             cgen_stmt(child)
-    #delete scope
+    scope_handler.del_scope()
 
 
 def cgen_variable_delc(node):

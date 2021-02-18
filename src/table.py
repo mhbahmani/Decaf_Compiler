@@ -308,6 +308,12 @@ class ScopeHandler():
     def add_local(self, type, name):
         self.scops[len(self.scops) - 1].add_local(type, name)
 
+    def add_temp(self, type):
+        return self.scops[len(self.scops) - 1].add_temprory(type)
+    
+    def del_scope(self):
+        self.scops.pop()
+
     
 class Scope:
     def __init__(self, parent, is_global = False, offset = 0):
@@ -349,10 +355,12 @@ class Scope:
 
     def add_temprory(self, type):
         name = "_t" + str(self.temp_count):
-        addr = Address(-4*(len(self.locals) + 2), AddressType.Local)
+        addr = Address(-4*(len(self.locals) + 2 + offset), AddressType.Local)
+        self.temp_count += 1
         var = Variable(name, type, addr)
         self.locals.append(var)
         push_stack("$zero")
+        return var
 
 scope_handler = ScopeHandler()
 
