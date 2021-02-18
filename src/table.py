@@ -274,11 +274,11 @@ class ScopeHandler():
     def __init__(self):
         self.scops = list()
 
-    def add_scope(self):
-        if len(self.scops) > 0:
-            self.scops.append(Scope(self.scops[len(self.scops) - 1])) # scope is dynamic for funcs
+    def add_scope(self, is_function):
+        if is_function:
+            self.scops.append(Scope(None)
         else :
-            self.scops.append(Scope(None))
+            self.scops.append(Scope(self.scops[len(self.scops) - 1], offset = self.scops[len(self.scops) - 1].offset + len(self.scops[len(self.scops) - 1].locals)))
 
 
     def find_variable(self, name):
@@ -308,14 +308,21 @@ class ScopeHandler():
     def add_local(self, type, name):
         self.scops[len(self.scops) - 1].add_local(type, name)
 
+    def add_temp(self, type):
+        return self.scops[len(self.scops) - 1].add_temprory(type)
+    
+    def del_scope(self):
+        self.scops.pop()
+
     
 class Scope:
-    def __init__(self, parent, is_global = False):
+    def __init__(self, parent, is_global = False, offset = 0):
             self.params = list()
             self.locals = list()
             self.parent = parent
             self.is_global  = is_global
             self.temp_count = 0
+            self.offset = offset
     
     def add_param(self, type, name):
         addr = Address(4*(len(self.params) + 1), AddressType.Local)
@@ -331,7 +338,7 @@ class Scope:
         
 
     def add_local(self, type, name):
-        addr = Address(-4*(len(self.locals) + 2), AddressType.Local)
+        addr = Address(-4*(len(self.locals) + 2 + offset), AddressType.Local)
         var = Variable(name, type, addr)
         self.locals.append(var)
         push_stack("$zero")
@@ -348,10 +355,12 @@ class Scope:
 
     def add_temprory(self, type):
         name = "_t" + str(self.temp_count):
-        addr = Address(-4*(len(self.locals) + 2), AddressType.Local)
+        addr = Address(-4*(len(self.locals) + 2 + offset), AddressType.Local)
+        self.temp_count += 1
         var = Variable(name, type, addr)
         self.locals.append(var)
         push_stack("$zero")
+        return var
 
 scope_handler = ScopeHandler()
 

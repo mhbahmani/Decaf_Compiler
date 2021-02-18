@@ -280,11 +280,11 @@ def cgen_stmt(node):
     elif child.data == "ifstmt":
         cgen_if(child)
     elif child.data == "whilestmt":
-        cgen_while(chile)
+        cgen_while(child)
     elif child.data == "forstmt":
         cgen_for(child)
     elif child.data == "breakstmt":
-        cgen_break(chile)
+        cgen_break(child)
     elif child.data == "continuestmt":
         cgen_continue(child)
     elif child.data == "returnstmt":
@@ -337,11 +337,17 @@ def cgen_stmtblock(node):
     if node.get_attribute("in_func"):
         pass
     else :
-        scope_handler.add_scope()
+        scope_handler.add_scope(False)
     
     for child in node.children:
         if child.data == "variabledecl":
-            cgen_variable_delc(child)
+            cgen_variable_delc(child.children[0])
         elif child.data == "stmt":
             cgen_stmt(child)
-    #delete scope
+    scope_handler.del_scope()
+
+
+def cgen_variable_delc(node):
+    name, type_var = get_varieble_data(node)
+    scope_handler.add_local(type_var, name)
+
