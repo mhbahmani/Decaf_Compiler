@@ -66,6 +66,10 @@ def emit_lw(destination, source, offset = 0, word = True):
         print("lb " + destination + ", " + str(offset) + "(" + source + ")")
 
 
+def emit_lw_double(destination, source, offsset = 0):
+    print("l.s " + destination + str(offset) + "(" + source + ")")
+
+
 def emit_li(destination, imediate):
     print("li " + destination + ", " + imediate)
 
