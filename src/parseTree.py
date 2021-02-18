@@ -38,7 +38,7 @@ class Node:
 source = None
 
 def build_parser_tree(lark_tree):
-    source = Node(lark_tree.data, None)
+    source = Node(adjust_data(lark_tree.data), None)
     for child in lark_tree.children:
         source.add_child(build_node_parse_tree(child, source))
     return source
@@ -46,9 +46,17 @@ def build_parser_tree(lark_tree):
 
 def build_node_parse_tree(lark_node, parent):
     if isinstance(lark_node, Tree):
-        node = Node(lark_node.data, parent)
+        node = Node(adjust_data(lark_node.data), parent)
         for child in lark_node.children:
             node.add_child(build_node_parse_tree(child, node))
     else :
         return Node(lark_node, parent)
     
+
+
+def adjust_data(data):
+    expr = ["expr", "expr1", "expr2", "expr3", "expr4", "expr5", "expr6", "expr7" , "expr8"]
+    if data in :
+        return "expr"
+    else :
+        return data
