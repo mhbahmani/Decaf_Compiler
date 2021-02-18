@@ -118,3 +118,8 @@ def emit_itob():
     emit_lable("___itob_ret")
     emit_jr()
     
+
+def emit_btoi():
+    emit_lable("___btoi")
+    emit_lw("$v0", "$fp", 4)
+    emit_jr()
