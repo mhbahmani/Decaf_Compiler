@@ -127,3 +127,10 @@ def emit_btoi():
     emit_lable("___btoi")
     emit_lw("$v0", "$fp", 4)
     emit_jr()
+
+def emit_dtoi():
+    emit_lable("___dtoi")
+    emit_lw_double("$f0", "$fp", 4)
+    emit("round.w.s $f0, $f0")
+    emit("mfc1 $v0, $f0")
+    emit_jr()
