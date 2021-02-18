@@ -274,11 +274,11 @@ class ScopeHandler():
     def __init__(self):
         self.scops = list()
 
-    def add_scope(self):
-        if len(self.scops) > 0:
-            self.scops.append(Scope(self.scops[len(self.scops) - 1])) # scope is dynamic for funcs
+    def add_scope(self, is_function):
+        if is_function:
+            self.scops.append(Scope(None)
         else :
-            self.scops.append(Scope(None))
+            self.scops.append(Scope(self.scops[len(self.scops) - 1], offset = self.scops[len(self.scops) - 1].offset + len(self.scops[len(self.scops) - 1].locals)))
 
 
     def find_variable(self, name):
@@ -310,12 +310,13 @@ class ScopeHandler():
 
     
 class Scope:
-    def __init__(self, parent, is_global = False):
+    def __init__(self, parent, is_global = False, offset = 0):
             self.params = list()
             self.locals = list()
             self.parent = parent
             self.is_global  = is_global
             self.temp_count = 0
+            self.offset = offset
     
     def add_param(self, type, name):
         addr = Address(4*(len(self.params) + 1), AddressType.Local)
@@ -331,7 +332,7 @@ class Scope:
         
 
     def add_local(self, type, name):
-        addr = Address(-4*(len(self.locals) + 2), AddressType.Local)
+        addr = Address(-4*(len(self.locals) + 2 + offset), AddressType.Local)
         var = Variable(name, type, addr)
         self.locals.append(var)
         push_stack("$zero")

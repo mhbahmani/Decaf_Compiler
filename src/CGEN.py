@@ -212,10 +212,7 @@ def cgen_function(node):
 
 def cgen_stmtblock(node):
     emit_comment("cgen for stmtblock")
-    if node.get_attribute("in_func"):
-        pass
-    else :
-        scope_handler.add_scope()
+    scope_handler.add_scope(node.get_attribute("in_func"))
     
     for child in node.children:
         if child.data == "variabledecl":
