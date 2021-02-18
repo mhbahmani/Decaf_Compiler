@@ -66,6 +66,10 @@ def emit_lw(destination, source, offset = 0, word = True):
         print("lb " + destination + ", " + str(offset) + "(" + source + ")")
 
 
+def emit_lw_double(destination, source, offsset = 0):
+    print("l.s " + destination + str(offset) + "(" + source + ")")
+
+
 def emit_li(destination, imediate):
     print("li " + destination + ", " + imediate)
 
@@ -106,3 +110,36 @@ def push_stack(source):
 
 def emit_sw(source, destinaton, offset = 0):
     print("sw " + source + ", " + str(offset) + "(" + destinaton + ")")
+
+
+
+def emit_itob():
+    emit_lable("___itob")
+    emit_lw("$s0", "$fp", 4)
+    emit_li("$v0", "0")
+    emit_branch_zero("$s0", "___itob_ret")
+    emit_li("$v0", "1")
+    emit_lable("___itob_ret")
+    emit_jr()
+    
+
+def emit_btoi():
+    emit_lable("___btoi")
+    emit_lw("$v0", "$fp", 4)
+    emit_jr()
+
+def emit_dtoi():
+    emit_lable("___dtoi")
+    emit_lw_double("$f0", "$fp", 4)
+    emit("round.w.s $f0, $f0")
+    emit("mfc1 $v0, $f0")
+    emit_jr()
+
+def  emit_itod():
+    emit_lable("___itod")
+    emit_lw("$s0", "$fp", 4)
+    emit("mtc1 $s0, $f0")
+    emit("cvt.s.w $f0, $f0")
+    emit("mfc1 $v0, $f0")
+    emit_jr()
+
