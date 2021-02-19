@@ -48,8 +48,8 @@ def emit_jalr(register):
     print("jalr " + register)
 
 
-def emit_jr():
-    print("jr $ra")
+def emit_jr(register = "$ra"):
+    print("jr " + register)
 
 
 def emit_branch_zero(check, lable):

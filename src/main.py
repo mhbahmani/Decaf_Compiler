@@ -71,7 +71,7 @@ stmt : nullexpr ";"
         | printstmt
         | stmtblock
 
-nullexpr : (expr)?
+nullexpr : expr | nothing
 
 stmts : stmt*
 

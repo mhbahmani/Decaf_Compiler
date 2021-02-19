@@ -1,7 +1,6 @@
-from mipsCodes import add_data, emit_comment, create_lable, emit_lable, emit_j, emit, emit_li, emit_syscal, emit_sw, emit_sub
+from mipsCodes import add_data, emit_comment, create_lable, emit_lable, emit_j, emit, emit_li, emit_syscal, emit_sw, emit_lw, emit_jr
 from parseTree import Node
-from table import scope_handler, PrimitiveType, Variable
-
+from table import scope_handler, PrimitiveType, type_equality
 def data_label():
     num = 0
     while True:
@@ -50,15 +49,15 @@ def cgen_expr(node):
         if node.children[0].data == 'expr':
             return cgen_expr(node.children[0])
         elif node.children[0].data == 'T_READLINE':
-            return cgen_readline(node.children[0]) # TODO define used cgen function, remove this when function added
+            pass # return cgen_readline(node.children[0]) # TODO define used cgen function, remove this when function added
         elif node.children[0].data == 'T_READINTEGER':
             return cgen_readint(node.children[0])
         elif node.children[0].data == 'call':
-            return cgen_call(node.children[0]) # TODO define used cgen function, remove this when function added
+            pass # return cgen_call(node.children[0]) # TODO define used cgen function, remove this when function added
         elif node.children[0].data == 'T_THIS':
             raise Exception()
         elif node.children[0].data == 'lvalue':
-            return cgen_lvalue(node.children[0]) # TODO define used cgen function, remove this when function added
+            pass # return cgen_lvalue(node.children[0]) # TODO define used cgen function, remove this when function added
         elif node.children[0].data == 'constant':
             return cgen_constant(node.children[0])
 
@@ -68,42 +67,42 @@ def cgen_expr(node):
         elif node.children[0].data == '-':
             return cgen_expr_neg(node)
         elif node.children[0].data == 'T_NEW':
-            return cgen_expr_new(node) # TODO define used cgen function, remove this when function added
+            pass # return cgen_expr_new(node) # TODO define used cgen function, remove this when function added
 
     elif len(node.children) == 3:
         if node.children[1].data == 'T_ASSIGN':
-            return cgen_expr_assign(node) # TODO define used cgen function, remove this when function added
+            pass # return cgen_expr_assign(node) # TODO define used cgen function, remove this when function added
         elif node.children[1].data == 'T_OR':
-            return cgen_expr_or(node) # TODO define used cgen function, remove this when function added
+            pass # return cgen_expr_or(node) # TODO define used cgen function, remove this when function added
         elif node.children[1].data == 'T_AND':
-            return cgen_expr_and(node) # TODO define used cgen function, remove this when function added
+            pass # return cgen_expr_and(node) # TODO define used cgen function, remove this when function added
         elif node.children[1].data == 'T_EQUAL':
-            return cgen_expr_equal(node) # TODO define used cgen function, remove this when function added
+            pass # return cgen_expr_equal(node) # TODO define used cgen function, remove this when function added
         elif node.children[1].data == 'T_NOT_EQUAL':
-            return cgen_expr_not_equal(node) # TODO define used cgen function, remove this when function added
+            pass # return cgen_expr_not_equal(node) # TODO define used cgen function, remove this when function added
         elif node.children[1].data == 'T_GREATER_THAN_EQUAL':
-            return cgen_expr_ge(node) # TODO define used cgen function, remove this when function added
+            pass # return cgen_expr_ge(node) # TODO define used cgen function, remove this when function added
         elif node.children[1].data == '>':
-            return cgen_expr_g(node) # TODO define used cgen function, remove this when function added
+            pass # return cgen_expr_g(node) # TODO define used cgen function, remove this when function added
         elif node.children[1].data == 'T_LESS_THAN_EQUAL':
-            return cgen_expr_le(node) # TODO define used cgen function, remove this when function added
+            pass # return cgen_expr_le(node) # TODO define used cgen function, remove this when function added
         elif node.children[1].data == '<':
-            return cgen_expr_l(node) # TODO define used cgen function, remove this when function added
+            pass # return cgen_expr_l(node) # TODO define used cgen function, remove this when function added
         elif node.children[1].data == '-':
-            return cgen_expr_sub(node) # TODO define used cgen function, remove this when function added
+            pass # return cgen_expr_sub(node) # TODO define used cgen function, remove this when function added
         elif node.children[1].data == '+':
-            return cgen_expr_add(node) # TODO define used cgen function, remove this when function added
+            pass # return cgen_expr_add(node) # TODO define used cgen function, remove this when function added
         elif node.children[1].data == '*':
-            return cgen_expr_mul(node) # TODO define used cgen function, remove this when function added
+            pass # return cgen_expr_mul(node) # TODO define used cgen function, remove this when function added
         elif node.children[1].data == '/':
-            return cgen_expr_div(node) # TODO define used cgen function, remove this when function added
+            pass # return cgen_expr_div(node) # TODO define used cgen function, remove this when function added
         elif node.children[1].data == '%':
-            return cgen_expr_mod(node) # TODO define used cgen function, remove this when function added
+            pass # return cgen_expr_mod(node) # TODO define used cgen function, remove this when function added
         elif node.children[1].data == 'expr':
             if node.children[0].data == '(':
-                return cgen_expr(node.children[1])
+                pass # return cgen_expr(node.children[1])
             elif node.children[0].data == 'T_NEWARRAY':
-                return cgen_new_array(node) # TODO define used cgen function, remove this when function added
+                pass # return cgen_new_array(node) # TODO define used cgen function, remove this when function added
 
 
 def cgen_expr_not(node): # TODO check
@@ -264,11 +263,11 @@ def cgen_break(node):
 
 
 def cgen_return(node):
-    emit_comment("cgen for break")
+    emit_comment("cgen for return")
     # checking validity of statement
-    func = node.ref_parent
+    func = node.parent
     while func is not None and func.data != "functiondecl":
-        func = func.ref_parent
+        func = func.parent
 
     # return isn't in any function!
     if func is None:
@@ -277,10 +276,10 @@ def cgen_return(node):
         )
 
     # return for void functions
-    if node.ref_child[0].data == "nothing":
-        if func.ref_child[0].data == "void":
-            emit_move("$sp", "$fp")
-            emit("jr $ra")
+    if node.children[1].children[0].data == "nothing":
+        if func.get_attribute("ret_type") == "void":
+            emit_lw("$s0", "$fp", 4)
+            emit_jr("$s0")
             return
         else:
             raise Exception(
@@ -288,16 +287,15 @@ def cgen_return(node):
             )
 
     # return for non void functions
-    type = get_type(func.ref_child[0])  # type of parent function
-    expr = cgen_expr(node.ref_child[0])  # expr node of return
+    type = func.get_attribute("ret_type")  # type of parent function
+    expr = cgen_expr(node.child[1].children[0])  # expr node of return
 
-    expr.attribute[AttName.address].load()
-    emit_move("$v0", "$s0")
-    emit_move("$sp", "$fp")
-    emit("jr $ra")
-
-    return node.ref_child[0].data != "nothing"
-
+    if type_equality(type, expr.type):
+        emit_lw("$v0", "$fp", expr.address.offset)
+        emit_lw("$s0", "$fp", 4)
+        emit_jr("$s0")
+    else :
+        raise Exception()
 
 
 def cgen_null_expr(node):
@@ -365,8 +363,14 @@ def recognize_class_functions(node):
 
 def cgen_function(node):
     emit_comment("cgen for functondecl")
+    name, type = get_varieble_data(node)
     node.children[5].add_attribute("in_func", True)
-    #to do
+    node.add_attribute("ret_type", type)
+    emit_lable("___" + name) #TODO check for overload
+    emit_sw("$ra", "$fp", 4)
+    cgen_stmtblock(node.childeren[5])
+    emit_lw("$s0", "$fp", 4)
+    emit_jr("$s0")
 
 
 def cgen_stmtblock(node):
@@ -381,7 +385,8 @@ def cgen_stmtblock(node):
             cgen_variable_delc(child.children[0])
         elif child.data == "stmt":
             cgen_stmt(child)
-    scope_handler.del_scope()
+    if not node.get_attribute("in_func"):
+        scope_handler.del_scope()
 
 
 def cgen_variable_delc(node):
