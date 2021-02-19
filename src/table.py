@@ -1,13 +1,33 @@
 import enum
-from CGEN import cgen_global_variable, get_type, get_varieble_data
 from parseTree import Node
-from mipsCodes  import emit_comment, add_data, push_stack, emit_move, emit_lw, pop_stack
+from mipsCodes  import emit_comment, add_data, push_stack, emit_move, emit_lw
 
 test_classes = list()
 test_interfaces = list()
 test_functions = list()
 test_variables = list()
 class_types = list()
+
+
+def get_varieble_data(node): 
+    type_var = find_type(node)
+    name = find_name(node)
+    return name, type_var
+
+
+def find_name(node):
+    return node.children[1].children[0].data
+
+
+def find_type(node):
+    temp_type = node.children[0]
+    if temp_type.data == "T_VOID":
+        return "void"
+    if len(temp_type.children) > 1:
+        return temp_type.children[0].children[0].data, len(temp_type.children) - 1
+    else :
+        return temp_type.children[0].children[0].data
+
 
 class FuncDef:
     def __init__(self, name, lable, inputs_type, return_type):
@@ -276,8 +296,8 @@ class ScopeHandler():
 
     def add_scope(self, is_function):
         if is_function:
-            self.scops.append(Scope(None)
-        else :
+            self.scops.append(Scope(None))
+        else:
             self.scops.append(Scope(self.scops[len(self.scops) - 1], offset = self.scops[len(self.scops) - 1].offset + len(self.scops[len(self.scops) - 1].locals)))
 
 
@@ -365,7 +385,7 @@ class Scope:
         return None
 
     def add_temprory(self, type):
-        name = "_t" + str(self.temp_count):
+        name = "_t" + str(self.temp_count)
         addr = Address(-4*(len(self.locals) + 2 + offset), AddressType.Local)
         self.temp_count += 1
         var = Variable(name, type, addr)

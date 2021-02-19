@@ -23,27 +23,6 @@ def cgen(node):
     emit_syscal()
 
 
-
-def get_varieble_data(node): 
-    type_var = find_type(node)
-    name = find_name(node)
-    return name, type_var
-
-
-def find_name(node):
-    return node.children[1].children[0].data
-
-
-def find_type(node):
-    temp_type = node.children[0]
-    if temp_type.data == "T_VOID":
-        return "void"
-    if len(temp_type.children) > 1:
-        return temp_type.children[0].children[0].data, len(temp_type.children) - 1
-    else :
-        return temp_type.children[0].children[0].data
-
-
 def cgen_expr(node):
     if len(node.children) == 1:
         if node.children[0].data == 'expr':

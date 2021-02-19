@@ -56,7 +56,7 @@ def build_node_parse_tree(lark_node, parent):
 
 def adjust_data(data):
     expr = ["expr", "expr1", "expr2", "expr3", "expr4", "expr5", "expr6", "expr7" , "expr8"]
-    if data in :
+    if data in expr:
         return "expr"
     else :
         return data

@@ -1,6 +1,5 @@
 from lark import Lark
 from CGEN import cgen
-from table import emit
 from parseTree import build_parser_tree
 import sys
 import os
@@ -236,7 +235,6 @@ def main(argv):
         code = input_file.read()
         lark_tree = parser.parse(code)
         parseTree = build_parser_tree(lark_tree)
-        print(parseTree)
 
     with open(os.path.join("out", _output), "w") as output_file:
         sys.stdout = output_file
@@ -247,7 +245,7 @@ def main(argv):
             os.remove(os.path.join("out", _output))
             with open(os.path.join("out", _output), "w") as f:
                 sys.stdout = f
-                emit(error_prog)
+                print(error_prog)
         sys.stdout.close()
 
 
