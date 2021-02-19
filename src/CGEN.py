@@ -1,4 +1,4 @@
-from mipsCodes import add_data, emit_comment, create_lable, emit_lable, emit_j, emit, emit_li, emit_syscal, emit_sw, emit_lw, emit_jr, emit_jal, emit_sub, emit_la
+from mipsCodes import add_data, emit_comment, create_lable, emit_lable, emit_j, emit, emit_li, emit_syscal, emit_sw, emit_lw, emit_jr, emit_jal, emit_sub, emit_la, emit_branch_zero
 from parseTree import Node
 from table import scope_handler, PrimitiveType, type_equality, recognize_global_class, recognize_global_interface, recognize_global_variable, recognize_golbal_function, set_class_types, check_main_function, cgen_global_variables
 def data_label():
@@ -202,6 +202,10 @@ def cgen_if(node):
     node.add_attribute("else", else_lable)
     node.add_attribute("end", end_if_lable)
     t1 = cgen_expr(node.children[2])
+    if t1.type != PrimitiveType.boolean:
+        raise Exception
+    emit_lw("$s0", "$fp", t1.address.offset)
+    emit_branch_zero("$s0", node.get_attribute("else"))
     #emit_load() load parameter for jump to else and type check
     cgen_stmt(node.children[4])
     if node.children[5].children[0].data == "T_ELSE":
@@ -220,6 +224,10 @@ def cgen_while(node):
     node.add_attribute("start", start_while_lable)
     emit_lable(node.get_attribute("start"))
     t1 = cgen_expr(node.children[2])
+    if t1.type != PrimitiveType.boolean:
+        raise Exception
+    emit_lw("$s0", "$fp", t1.address.offset)
+    emit_branch_zero("$s0", node.get_attribute("end"))
     #for jump to end and type check
     cgen_stmt(node.children[4])
     emit_j(node.get_attribute("start"))
@@ -236,6 +244,10 @@ def cgen_for(node):
     cgen_null_expr(node.children[2])
     emit_lable(node.get_attribute("start"))
     t1 = cgen_expr(node.children[4])
+    if t1.type != PrimitiveType.boolean:
+        raise Exception
+    emit_lw("$s0", "$fp", t1.address.offset)
+    emit_branch_zero("$s0", node.get_attribute("end"))
     #for jump to end and type check bool
     cgen_stmt(node.children[8])
     cgen_null_expr(node.children[6])
