@@ -1,7 +1,7 @@
 import enum
 from CGEN import cgen_global_variable, get_type, get_varieble_data
 from parseTree import Node
-from mipsCodes  import emit_comment, add_data, push_stack, emit_move
+from mipsCodes  import emit_comment, add_data, push_stack, emit_move, emit_lw, pop_stack
 
 test_classes = list()
 test_interfaces = list()
@@ -312,7 +312,18 @@ class ScopeHandler():
         return self.scops[len(self.scops) - 1].add_temprory(type)
     
     def del_scope(self):
-        self.scops.pop()
+        s = self.scops.pop()
+        if s.parent != None:
+            for var in s,locals:
+                emit_addi("$sp", "$sp", "4")
+        else:
+            emit_lw("$fp", "$fp", 0)
+            for var in s,locals:
+                emit_addi("$sp", "$sp", "4")
+            for var in s,params:
+                emit_addi("$sp", "$sp", "4")
+            emit_addi("$sp", "$sp", "4")
+            emit_addi("$sp", "$sp", "4")
 
     
 class Scope:
