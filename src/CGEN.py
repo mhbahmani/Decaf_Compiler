@@ -1,6 +1,6 @@
-from mipsCodes import add_data, emit_comment, create_lable, emit_lable, emit_j, emit, emit_li, emit_syscal, emit_sw, emit_lw, emit_jr
+from mipsCodes import add_data, emit_comment, create_lable, emit_lable, emit_j, emit, emit_li, emit_syscal, emit_sw, emit_lw, emit_jr, emit_jal, emit_sub, emit_la
 from parseTree import Node
-from table import scope_handler, PrimitiveType, type_equality
+from table import scope_handler, PrimitiveType, type_equality, recognize_global_class, recognize_global_interface, recognize_global_variable, recognize_golbal_function, set_class_types, check_main_function, cgen_global_variables
 def data_label():
     num = 0
     while True:
@@ -12,15 +12,15 @@ data_label_generator = data_label()
 
 def cgen(node):
     emit(".text")
-    emit_lable("main")
     node = node.children[0]
     recognize_class_functions(node)
     init_decls(node)
-
-
-def cgen_global_variable(node):
-    emit_comment("cgen global variable")
-    name, type_var = get_varieble_data(node)
+    emit_lable("main")
+    scope_handler.add_scope(True)
+    scope_handler.store_and_update_fp()
+    emit_jal("___main")
+    emit_li("$v0", 10)
+    emit_syscal()
 
 
 
@@ -325,30 +325,32 @@ def cgen_stmt(node):
     elif child.data == "returnstmt":
         cgen_return(child)
     elif child.data == "printstmt":
-        cgen_print(child)
+        pass
     elif child.data == "stmtblock":
         cgen_stmtblock(child)
 
 
 def init_decls(node):
-    for child in node.children:
-        if child.data == "VariableDecl":
-            cgen_global_variable(child)
-    for child in node.children:
-        if child.data == "InterfaceDecl":
-            init_interface(child)
-    for child in node.children:
-        if child.data == "ClassDecl":
-            init_class(child)
-    for child in node.children:
-        if child.data == "FunctionDecl":
-            init_function(child)
+    # for child in node.children:
+    #     if child.data == "VariableDecl":
+    #         cgen_global_variable(child)
+    # for child in node.children:
+    #     if child.data == "InterfaceDecl":
+    #         init_interface(child)
+    # for child in node.children:
+    #     if child.data == "ClassDecl":
+    #         init_class(child)
+    # for child in node.children:
+    #     if child.data == "FunctionDecl":
+    #         init_function(child)
+    pass
 
 
 def recognize_class_functions(node):
     for child in node.children:
         if child.data == "FunctionDecl":
             recognize_golbal_function(child)
+            cgen_function(child)
         elif child.data == "InterfaceDecl":
             recognize_global_interface(child)
         elif child.data == "ClassDecl":
