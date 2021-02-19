@@ -354,7 +354,8 @@ def cgen_stmtblock(node):
             cgen_variable_delc(child.children[0])
         elif child.data == "stmt":
             cgen_stmt(child)
-    scope_handler.del_scope()
+    if not node.get_attribute("in_func"):
+        scope_handler.del_scope()
 
 
 def cgen_variable_delc(node):
