@@ -365,3 +365,13 @@ class Scope:
 scope_handler = ScopeHandler()
 
 
+def type_equality(type1, type2):
+    if len(type1) != len(type2):
+        return False
+    if len(type1) == 1:
+        return type1 == type2
+    else :
+        return type1[0] == type2[0] and type2[1] == type1[1]
+
+
+

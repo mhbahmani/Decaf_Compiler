@@ -1,6 +1,6 @@
 from mipsCodes import add_data, emit_comment, create_lable, emit_lable, emit_j, emit, emit_li, emit_syscal, emit_sw, emit_lw, emit_jr
 from parseTree import Node
-from table import scope_handler, PrimitiveType
+from table import scope_handler, PrimitiveType, type_equality
 
 def data_label():
     num = 0
@@ -237,11 +237,11 @@ def cgen_break(node):
 
 
 def cgen_return(node):
-    emit_comment("cgen for break")
+    emit_comment("cgen for return")
     # checking validity of statement
-    func = node.ref_parent
+    func = node.parent
     while func is not None and func.data != "functiondecl":
-        func = func.ref_parent
+        func = func.parent
 
     # return isn't in any function!
     if func is None:
@@ -250,10 +250,10 @@ def cgen_return(node):
         )
 
     # return for void functions
-    if node.ref_child[0].data == "nothing":
-        if func.ref_child[0].data == "void":
-            emit_move("$sp", "$fp")
-            emit("jr $ra")
+    if node.children[1].children[0].data == "nothing":
+        if func.get_attribute("ret_type") == "void":
+            emit_lw("$s0", "$fp", 4)
+            emit_jr("$s0")
             return
         else:
             raise Exception(
@@ -261,16 +261,15 @@ def cgen_return(node):
             )
 
     # return for non void functions
-    type = get_type(func.ref_child[0])  # type of parent function
-    expr = cgen_expr(node.ref_child[0])  # expr node of return
+    type = func.get_attribute("ret_type")  # type of parent function
+    expr = cgen_expr(node.child[1].children[0])  # expr node of return
 
-    expr.attribute[AttName.address].load()
-    emit_move("$v0", "$s0")
-    emit_move("$sp", "$fp")
-    emit("jr $ra")
-
-    return node.ref_child[0].data != "nothing"
-
+    if type_equality(type, expr.type):
+        emit_lw("$v0", "$fp", expr.address.offset)
+        emit_lw("$s0", "$fp", 4)
+        emit_jr("$s0")
+    else :
+        raise Exception()
 
 
 def cgen_null_expr(node):
