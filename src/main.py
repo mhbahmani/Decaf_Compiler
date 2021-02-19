@@ -1,7 +1,9 @@
 from lark import Lark
 from CGEN import cgen
+from table import emit
 from parseTree import build_parser_tree
 import sys
+import os
 
 grammar = """
 start : program
@@ -197,6 +199,19 @@ MULTI_LINE_COMMENT : /\/\* [.\\n]* \*\//
 
 parser = Lark(grammar, parser="lalr", debug=True)
 
+error_prog = '''.text
+.globl main
+
+main:
+la $a0 , errorMsg
+addi $v0 , $zero, 4
+syscall
+jr $ra
+
+.data
+errorMsg: .asciiz "Semantic Error"
+'''
+
 
 def main(argv):
     _input = ""
@@ -223,9 +238,16 @@ def main(argv):
         parseTree = build_parser_tree(lark_tree)
         print(parseTree)
 
-    with open("out/" + _output, "w") as output_file:
+    with open(os.path.join("out", _output), "w") as output_file:
         sys.stdout = output_file
-        cgen(parseTree)
+        try:
+            cgen(parseTree)
+        except:
+            sys.stdout.close()
+            os.remove(os.path.join("out", _output))
+            with open(os.path.join("out", _output), "w") as f:
+                sys.stdout = f
+                emit(error_prog)
         sys.stdout.close()
 
 
