@@ -25,6 +25,10 @@ def emit_add(output, input1, input2):
     print("add " + output + ", " + input1 + ", " + input2)
 
 
+def emit_sub(output, input1, input2):
+    print("sub " + output + ", " + input1 + ", " + input2)
+
+
 def emit_addi(output, input1, imediete):
     print("addi " + output + ", " + input1 + ", " + imediete)
 

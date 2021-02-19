@@ -1,6 +1,6 @@
-from mipsCodes import add_data, emit_comment, create_lable, emit_lable, emit_j, emit, emit_li, emit_syscal, emit_sw
+from mipsCodes import add_data, emit_comment, create_lable, emit_lable, emit_j, emit, emit_li, emit_syscal, emit_sw, emit_sub
 from parseTree import Node
-from table import scope_handler, PrimitiveType
+from table import scope_handler, PrimitiveType, Variable
 
 def data_label():
     num = 0
@@ -108,12 +108,23 @@ def cgen_expr(node):
 
 def cgen_expr_not(node): # TODO check
     operand = cgen_expr(node.children[0])
-    return 1 - operand
+    if operand.type != PrimitiveType.boolean:
+        raise Exception()
+    emit_lw('$t0', '$fp', operand.address)
+    emit_li('$t1', '1')
+    emit_sub('$t0', '$t1', '$t0')
+    temp = scope_handler.add_temp(PrimitiveType.integer)
+    emit_sw('$t0', '$fp', temp.address.offset)
+    return temp
 
 
 def cgen_expr_neg(node): # TODO check
     operand = cgen_expr(node.children[0])
-    return -operand
+    emit_lw('$t0', '$fp', operand.address)
+    emit_sub('$t0', '$zero', '$t0')
+    temp = scope_handler.add_temp(PrimitiveType.integer)
+    emit_sw('$t0', '$fp', temp.address.offset)
+    return temp
 
 
 def cgen_constant(node): # TODO check !!!IMPORTANT
@@ -124,16 +135,24 @@ def cgen_constant(node): # TODO check !!!IMPORTANT
         label = next(data_label_generator)
         
         add_data(label, value)
+        emit_la('$t0', label)
+        emit_lw('$t1', '$t0')
+        temp = scope_handler.add_temp(PrimitiveType.integer)
+        emit_sw('$t1', '$fp', temp.address.offset)
 
-        return value
+        return temp
 
     elif node.children[0].data == 'T_DOUBLE_CONSTANT':
         value = node.children[0].data
         label = next(data_label_generator)
         
         add_data(label, value)
+        emit_la('$t0', label)
+        emit_lw('$t1', '$t0')
+        temp = scope_handler.add_temp(PrimitiveType.double)
+        emit_sw('$t1', '$fp', temp.address.offset)
 
-        return value
+        return temp
 
     elif node.children[0].data == 'T_BOOL_CONSTANT':
         value = node.children[0].data
@@ -144,8 +163,12 @@ def cgen_constant(node): # TODO check !!!IMPORTANT
         label = next(data_label_generator)
         
         add_data(label, value)
+        emit_la('$t0', label)
+        emit_lw('$t1', '$t0')
+        temp = scope_handler.add_temp(PrimitiveType.boolean)
+        emit_sw('$t1', '$fp', temp.address.offset)
 
-        return value
+        return temp
 
     elif node.children[0].data == 'T_STRING_CONSTANT':
         value = node.children[0].data
@@ -153,8 +176,12 @@ def cgen_constant(node): # TODO check !!!IMPORTANT
         label = next(data_label_generator)
         
         add_data(label, value)
+        emit_la('$t0', label)
+        emit_lw('$t1', '$t0')
+        temp = scope_handler.add_temp(PrimitiveType.string)
+        emit_sw('$t1', '$fp', temp.address.offset)
 
-        return value
+        return temp
 
     elif node.children[0].data == 'T_NULL':
         pass # TODO
