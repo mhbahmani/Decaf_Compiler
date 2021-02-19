@@ -1,4 +1,4 @@
-from mipsCodes import add_data, emit_comment, create_lable, emit_lable, emit_j, emit, emit_li, emit_syscal, emit_sw
+from mipsCodes import add_data, emit_comment, create_lable, emit_lable, emit_j, emit, emit_li, emit_syscal, emit_sw, emit_lw, emit_jr
 from parseTree import Node
 from table import scope_handler, PrimitiveType
 
@@ -338,8 +338,15 @@ def recognize_class_functions(node):
 
 def cgen_function(node):
     emit_comment("cgen for functondecl")
+    name, type = get_varieble_data(node)
     node.children[5].add_attribute("in_func", True)
-    #to do
+    node.add_attribute("ret_type", type)
+    emit_lable("___" + name) #TODO check for overload
+    emit_sw("$ra", "$fp", 4)
+    cgen_stmtblock(node.childeren[5])
+    emit_lw("$s0", "$fp", 4)
+    emit_jr("$s0")
+
 
 
 def cgen_stmtblock(node):
