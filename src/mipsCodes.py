@@ -1,10 +1,16 @@
 debug = True
-lable_count = 0
+label_count = 0
 
-def create_lable():
-    global lable_count
-    out = "_l" + str(lable_count)
-    lable_count += 1
+"""
+    Generate mipsCode.
+    Prints save mips codes on output files.
+    Each function is related to a mips code.
+"""
+
+def create_label():
+    global label_count
+    out = "_l" + str(label_count)
+    label_count += 1
     return out
 
 
@@ -17,8 +23,8 @@ def emit(line):
     print(line)
 
 
-def emit_lable(lable):
-    print(lable + " :")
+def emit_label(label):
+    print(label + " :")
 
 
 def emit_add(output, input1, input2):
@@ -29,19 +35,19 @@ def emit_sub(output, input1, input2):
     print("sub " + output + ", " + input1 + ", " + input2)
 
 
-def emit_addi(output, input1, imediete):
-    print("addi " + output + ", " + input1 + ", " + imediete)
+def emit_addi(output, input1, immediate):
+    print("addi " + output + ", " + input1 + ", " + immediate)
 
 
 def emit_syscal():
     print("syscall")
 
 
-def emit_jal(lable):
-    print("jal " + lable)
+def emit_jal(label):
+    print("jal " + label)
 
-def emit_j(lable):
-    print("j " + lable)
+def emit_j(label):
+    print("j " + label)
 
 
 def emit_jalr(register):
@@ -52,15 +58,15 @@ def emit_jr(register = "$ra"):
     print("jr " + register)
 
 
-def emit_branch_zero(check, lable):
-    print("beqz " + check + ", " + lable)
+def emit_branch_zero(check, label):
+    print("beqz " + check + ", " + label)
 
 def emit_move(destination, source):
     print("move " + destination + ", " + source)
 
 
-def emit_la(destination, lable):
-    print("la " + destination + ", " + lable)
+def emit_la(destination, label):
+    print("la " + destination + ", " + label)
 
 
 def emit_lw(destination, source, offset = 0, word = True):
@@ -74,8 +80,8 @@ def emit_lw_double(destination, source, offset = 0):
     print("l.s " + source + str(offset) + "(" + destination + ")")
 
 
-def emit_li(destination, imediate):
-    print("li " + destination + ", " + imediate)
+def emit_li(destination, immediate):
+    print("li " + destination + ", " + immediate)
 
 
 def emit_mult_div(register1, register2, mult = True):
@@ -99,9 +105,9 @@ __false:
 
 '''
 
-def add_data(lable, definition):
+def add_data(label, definition):
     global data_section
-    data_section += lable + ":\n" + definition + "\n"
+    data_section += label + ":\n" + definition + "\n"
 
 
 def print_data_section():
@@ -113,35 +119,38 @@ def push_stack(source):
     emit_addi("$sp", "$sp", "-4")
     emit_sw(source, "sp")
 
+
 def emit_sw(source, destinaton, offset = 0):
     print("sw " + source + ", " + str(offset) + "(" + destinaton + ")")
 
 
 
 def emit_itob():
-    emit_lable("___itob")
+    emit_label("___itob")
     emit_lw("$s0", "$fp", 4)
     emit_li("$v0", "0")
     emit_branch_zero("$s0", "___itob_ret")
     emit_li("$v0", "1")
-    emit_lable("___itob_ret")
+    emit_label("___itob_ret")
     emit_jr()
     
 
 def emit_btoi():
-    emit_lable("___btoi")
+    emit_label("___btoi")
     emit_lw("$v0", "$fp", 4)
     emit_jr()
 
+
 def emit_dtoi():
-    emit_lable("___dtoi")
+    emit_label("___dtoi")
     emit_lw_double("$f0", "$fp", 4)
     emit("round.w.s $f0, $f0")
     emit("mfc1 $v0, $f0")
     emit_jr()
 
+
 def  emit_itod():
-    emit_lable("___itod")
+    emit_label("___itod")
     emit_lw("$s0", "$fp", 4)
     emit("mtc1 $s0, $f0")
     emit("cvt.s.w $f0, $f0")
